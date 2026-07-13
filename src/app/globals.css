@@ -30,7 +30,7 @@ body {
   font-family: "Urbanist", "Urbanist Fallback", ui-sans-serif, system-ui, sans-serif;
 }
 ::selection { background: #e3af23; color: #00032c; }
-a { color: inherit; text-decoration: none; }
+a { text-decoration: none; }
 button, input, textarea, select { font: inherit; }
 button { cursor: pointer; }
 
