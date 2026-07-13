@@ -1,59 +1,89 @@
-import { ArrowRight, CalendarDays, Heart, ShieldCheck, Sparkles } from "lucide-react";
+import { ArrowRight, Gift, Sparkles, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { services, team } from "@/data/site";
 
-const featured = services.filter((service) => service.featured).slice(0, 6);
+const offerings = [
+  { name: "Laser & Waxing", copy: "Say hello to smooth, hair-free skin.", category: "Waxing" },
+  { name: "Brow Shaping & Microblading", copy: "Precision and artistry for beautiful brows.", category: "Brows & Lashes" },
+  { name: "Facials", copy: "Customized treatments for healthy, radiant skin.", category: "Facials" },
+  { name: "Lash Enhancements", copy: "Fuller, darker, beautifully lifted lashes.", category: "Brows & Lashes" },
+  { name: "Reiki", copy: "Balance your energy and find harmony.", category: "Reiki" },
+  { name: "Makeup Services", copy: "Enhance your natural beauty for any occasion.", category: "Makeup" },
+  { name: "Massage Therapy", copy: "Relax, rejuvenate, and unwind.", category: "Massage" },
+];
 
 export default function Home() {
   return (
     <>
-      <section className="grain overflow-hidden bg-[#efe5d8]">
-        <div className="container-site grid min-h-[720px] items-center gap-14 py-16 lg:grid-cols-[1.05fr_.95fr] lg:py-20">
-          <div className="relative z-10 max-w-2xl">
-            <span className="eyebrow">Spa & wellness in Elma, NY</span>
-            <h1 className="font-display mt-7 text-[clamp(3.7rem,7.2vw,7rem)] leading-[.86] text-[#352b25]">Feel good in<br /><em className="font-normal text-[#a5482f]">your own skin.</em></h1>
-            <p className="mt-8 max-w-xl text-base leading-8 text-[#6d6056] sm:text-lg">Expert beauty and wellness care in a space that feels warm, personal, and completely judgment-free.</p>
-            <div className="mt-9 flex flex-col gap-3 sm:flex-row"><Link href="/book" className="button-primary">Find your appointment <ArrowRight size={16} /></Link><Link href="/services" className="button-secondary">Explore services</Link></div>
-            <div className="mt-11 flex flex-wrap gap-x-8 gap-y-3 text-xs font-semibold text-[#75685e]"><span className="flex items-center gap-2"><ShieldCheck size={16} className="text-[#9f4931]" /> Inclusive, expert care</span><span className="flex items-center gap-2"><CalendarDays size={16} className="text-[#9f4931]" /> Easy online booking</span></div>
+      <Link href="/services?category=Laser" className="flex min-h-16 items-center justify-center gap-5 bg-[#893d3e] px-5 text-center text-base font-medium text-white sm:text-xl">
+        <Star size={20} strokeWidth={1.8} />
+        <span>Now Offering Laser Hair Removal</span>
+        <Star size={20} strokeWidth={1.8} />
+      </Link>
+
+      <section className="relative overflow-hidden bg-[#00032c]">
+        <div className="relative mx-auto aspect-[1363/472] min-h-[250px] max-h-[590px] w-full max-w-[1536px]">
+          <Image
+            src="https://tupelohoneyspa.com/wp-content/uploads/2023/09/tupelo-home-hero-1-1536x533.jpg"
+            alt="Tupelo Honey Spa and Wellness Collective"
+            fill
+            priority
+            unoptimized
+            className="object-cover object-center"
+          />
+        </div>
+      </section>
+
+      <section className="bg-[#ead6cf] py-16 text-center sm:py-20">
+        <div className="container-site max-w-5xl">
+          <span className="eyebrow justify-center before:hidden">Welcome back</span>
+          <h1 className="font-display mt-4 text-4xl text-[#33373d] sm:text-5xl">Janell Is Back & Booking 🤍</h1>
+          <p className="mx-auto mt-6 max-w-4xl text-base leading-8 text-[#4f4f4f]">We’re so excited to welcome Janell Dixon back from maternity leave! Her schedule is now open during the week, and she’s available for all waxing, lash, and brow services—including Brow Shaping, Brow Maintenance, and Brow Maintenance with Enhancement.</p>
+          <p className="mx-auto mt-4 max-w-4xl text-base leading-8 text-[#4f4f4f]">As a Licensed Esthetician, Makeup Artist, and Registered Nurse, Janell brings expert care, precision, and artistry to every appointment.</p>
+          <Link href="/book?provider=janell" className="button-secondary mt-8 !rounded-[3px]">Book with Janell <ArrowRight size={16} /></Link>
+        </div>
+      </section>
+
+      <section className="bg-[#f6f5e9] py-20 sm:py-24">
+        <div className="container-site grid gap-12 lg:grid-cols-[.78fr_1.22fr] lg:items-center">
+          <div className="mx-auto grid aspect-square w-full max-w-[360px] place-items-center rounded-full border border-[#e3af23]/40 bg-white shadow-[0_24px_70px_#00032c0c]">
+            <div className="grid h-28 w-28 place-items-center rounded-full bg-[#e3af23] text-white"><Gift size={46} strokeWidth={1.4} /></div>
           </div>
-          <div className="relative mx-auto h-[510px] w-full max-w-[520px] lg:h-[600px]">
-            <div className="absolute left-[2%] top-[3%] h-[78%] w-[76%] overflow-hidden rounded-[45%_45%_8rem_8rem] bg-[#c8aa90] shadow-[0_35px_80px_#4c30251c]">
-              <Image src={team[0].image} alt="Julie from Tupelo Honey Spa" fill priority unoptimized className="object-cover object-top saturate-[.82]" />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#5c2d1f]/30 via-transparent to-transparent" />
-            </div>
-            <div className="absolute bottom-[1%] right-[1%] h-[44%] w-[48%] overflow-hidden rounded-[7rem_7rem_1.5rem_1.5rem] border-[8px] border-[#efe5d8] bg-[#ae8d73]">
-              <Image src={team[5].image} alt="Abby from Tupelo Honey Spa" fill unoptimized className="object-cover object-top saturate-[.78]" />
-            </div>
-            <div className="absolute right-[0] top-[8%] grid h-28 w-28 place-items-center rounded-full bg-[#a5482f] text-center text-[.65rem] font-bold uppercase leading-5 tracking-[.14em] text-white shadow-xl sm:h-32 sm:w-32"><span>Care for<br />every body<br /><Heart size={14} className="mx-auto mt-1 fill-white" /></span></div>
-            <svg aria-hidden="true" className="absolute bottom-[7%] left-[-4%] h-24 w-24 text-[#c18939]" viewBox="0 0 100 100"><path d="M50 92C49 58 65 34 88 14M50 92C50 55 32 33 10 20M53 72c13-1 23-6 31-15M47 68c-14-2-24-8-32-18M57 53c10-2 17-7 23-14M42 49c-10-3-17-8-22-15" fill="none" stroke="currentColor" strokeWidth="2" /></svg>
+          <div>
+            <span className="eyebrow">Give a little Tupelo Honey</span>
+            <h2 className="font-display mt-5 text-5xl leading-none text-[#33373d] sm:text-6xl">The Perfect Gift!</h2>
+            <p className="mt-6 max-w-2xl text-base leading-8 text-[#676767]">Give the gift of relaxation and self-care. Whether it’s for a special occasion or just because, a Tupelo Honey gift card is an easy way to make someone’s day a little sweeter.</p>
+            <a href="https://squareup.com/gift/VCQDNPYY0EWDH/order" target="_blank" rel="noreferrer" className="button-primary mt-8 !rounded-[3px]">Purchase a Gift Card <ArrowRight size={16} /></a>
           </div>
         </div>
       </section>
 
-      <section className="border-y border-[#e8ddd0] bg-[#fffdf9] py-6">
-        <div className="container-site flex flex-wrap items-center justify-center gap-x-10 gap-y-3 text-[.67rem] font-bold uppercase tracking-[.17em] text-[#76695e] sm:justify-between"><span>Waxing</span><span className="text-[#d29a49]">✦</span><span>Facials</span><span className="text-[#d29a49]">✦</span><span>Massage</span><span className="text-[#d29a49]">✦</span><span>Laser</span><span className="text-[#d29a49]">✦</span><span>Reiki</span><span className="text-[#d29a49]">✦</span><span>Brows & lashes</span></div>
+      <section className="bg-[#00032c] py-20 text-center text-white sm:py-28">
+        <div className="container-site max-w-4xl">
+          <span className="text-xs font-bold uppercase tracking-[.18em] text-[#e3af23]">Our purpose</span>
+          <h2 className="font-display mt-5 text-5xl sm:text-7xl">Spa & Wellness Collective</h2>
+          <p className="mx-auto mt-7 max-w-3xl text-base leading-8 text-white/75 sm:text-lg">At Tupelo Honey, we pride ourselves on creating a comfortable oasis where clients can take a break from the world. We’re dedicated to nurturing inner well-being, enhancing natural beauty, and helping every guest feel like the best version of themselves.</p>
+          <Link href="/about" className="button-light mt-9 !rounded-[3px]">Learn About Tupelo Honey <ArrowRight size={16} /></Link>
+        </div>
       </section>
 
-      <section className="section-pad">
+      <section className="bg-[#f6f5e9] py-20 sm:py-24">
         <div className="container-site">
-          <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between"><div><span className="eyebrow">Made for real life</span><h2 className="font-display mt-5 max-w-2xl text-5xl leading-[.96] sm:text-6xl">Care that meets you<br />where you are.</h2></div><p className="max-w-sm text-sm leading-7 text-[#756a61]">Choose what you need today. Every service is delivered by an independent specialist who cares deeply about their craft.</p></div>
+          <div className="text-center"><span className="eyebrow justify-center before:hidden">Services for every body</span><h2 className="font-display mt-4 text-5xl text-[#33373d] sm:text-6xl">What We Offer</h2></div>
           <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {featured.map((service, index) => <Link key={service.slug} href={`/book?service=${service.slug}`} className={`group paper-card relative overflow-hidden p-7 transition hover:-translate-y-1 hover:shadow-[0_22px_55px_#4d35240f] ${index === 0 ? "bg-[#a5482f] text-white" : ""}`}><div className={`mb-12 grid h-11 w-11 place-items-center rounded-full ${index === 0 ? "bg-white/15" : "bg-[#efe2d4] text-[#9f4931]"}`}><Sparkles size={18} /></div><p className={`text-[.65rem] font-bold uppercase tracking-[.14em] ${index === 0 ? "text-white/60" : "text-[#a5482f]"}`}>{service.category}</p><h3 className="font-display mt-2 text-3xl">{service.name}</h3><div className={`mt-5 flex items-center justify-between border-t pt-4 text-xs ${index === 0 ? "border-white/20 text-white/75" : "border-[#e8ddd0] text-[#756a61]"}`}><span>{service.price}{service.duration ? ` · ${service.duration}` : ""}</span><ArrowRight size={16} className="transition-transform group-hover:translate-x-1" /></div></Link>)}
+            {offerings.map((offering, index) => (
+              <Link key={offering.name} href={`/services?category=${encodeURIComponent(offering.category)}`} className={`group flex min-h-[235px] flex-col justify-between rounded-2xl border p-7 transition hover:-translate-y-1 hover:shadow-[0_18px_50px_#00032c12] ${index === 6 ? "border-[#893d3e] bg-[#893d3e] text-white lg:col-start-2" : "border-[#e4ded4] bg-white text-[#33373d]"}`}>
+                <Sparkles size={22} className={index === 6 ? "text-[#e3af23]" : "text-[#e3af23]"} />
+                <div><h3 className="font-display text-2xl">{offering.name}</h3><p className={`mt-3 text-sm leading-6 ${index === 6 ? "text-white/75" : "text-[#676767]"}`}>{offering.copy}</p><span className={`mt-5 inline-flex items-center gap-2 text-xs font-bold ${index === 6 ? "text-[#e3af23]" : "text-[#893d3e]"}`}>View Services <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" /></span></div>
+              </Link>
+            ))}
           </div>
-          <div className="mt-10 text-center"><Link href="/services" className="button-secondary">See all services <ArrowRight size={15} /></Link></div>
+          <div className="mt-10 text-center"><Link href="/services" className="button-primary !rounded-[3px]">View All Services <ArrowRight size={16} /></Link></div>
         </div>
       </section>
 
-      <section className="overflow-hidden bg-[#737a64] text-white">
-        <div className="container-site grid min-h-[620px] gap-12 py-20 lg:grid-cols-[.9fr_1.1fr] lg:items-center">
-          <div className="relative h-[480px] max-w-[470px] overflow-hidden rounded-[14rem_14rem_2rem_2rem]"><Image src={team[2].image} alt="Janell from Tupelo Honey Spa" fill unoptimized className="object-cover object-top saturate-[.8]" /></div>
-          <div><span className="eyebrow !text-[#f2c879]">The Tupelo difference</span><blockquote className="font-display mt-7 max-w-2xl text-5xl leading-[1.02] sm:text-6xl">“You don’t need fixing. You deserve care.”</blockquote><p className="mt-8 max-w-xl leading-8 text-white/70">This is a place to exhale. Our collective is built around skilled practitioners, honest recommendations, and the belief that beauty and wellness should feel welcoming—not intimidating.</p><div className="mt-9 flex flex-col gap-3 sm:flex-row"><Link href="/about" className="button-light">Our approach <ArrowRight size={15} /></Link><Link href="/team" className="button-secondary !border-white/30 !text-white hover:!bg-white/10">Meet the collective</Link></div></div>
-        </div>
-      </section>
-
-      <section className="section-pad bg-[#fffdf9]">
-        <div className="container-site text-center"><span className="eyebrow">Ready when you are</span><h2 className="font-display mx-auto mt-5 max-w-3xl text-5xl leading-[.95] sm:text-7xl">Your next hour could feel very different.</h2><p className="mx-auto mt-6 max-w-xl leading-7 text-[#756a61]">Browse availability, choose your specialist, and make a little room for yourself.</p><Link href="/book" className="button-primary mt-8">Book your visit <ArrowRight size={16} /></Link></div>
+      <section className="bg-white py-20 text-center sm:py-24">
+        <div className="container-site"><h2 className="font-display text-4xl text-[#33373d] sm:text-6xl">Ready for a little time to yourself?</h2><p className="mx-auto mt-5 max-w-xl leading-7 text-[#676767]">Choose your service, specialist, and time—all in one easy flow.</p><Link href="/book" className="button-primary mt-8 !rounded-[3px]">Book Now <ArrowRight size={16} /></Link></div>
       </section>
     </>
   );
