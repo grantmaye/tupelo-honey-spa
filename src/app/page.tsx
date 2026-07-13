@@ -34,13 +34,14 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="bg-[#ead6cf] py-16 text-center sm:py-20">
-        <div className="container-site max-w-5xl">
-          <span className="eyebrow justify-center before:hidden">Welcome back</span>
-          <h1 className="font-display mt-4 text-4xl text-[#33373d] sm:text-5xl">Janell Is Back & Booking 🤍</h1>
-          <p className="mx-auto mt-6 max-w-4xl text-base leading-8 text-[#4f4f4f]">We’re so excited to welcome Janell Dixon back from maternity leave! Her schedule is now open during the week, and she’s available for all waxing, lash, and brow services—including Brow Shaping, Brow Maintenance, and Brow Maintenance with Enhancement.</p>
-          <p className="mx-auto mt-4 max-w-4xl text-base leading-8 text-[#4f4f4f]">As a Licensed Esthetician, Makeup Artist, and Registered Nurse, Janell brings expert care, precision, and artistry to every appointment.</p>
-          <Link href="/book?provider=janell" className="button-secondary mt-8 !rounded-[3px]">Book with Janell <ArrowRight size={16} /></Link>
+      <section className="border-y border-[#893d3e]/10 bg-[#ead6cf] py-6 sm:py-7">
+        <div className="container-site flex flex-col gap-4 text-center sm:flex-row sm:items-center sm:justify-between sm:text-left">
+          <div>
+            <span className="text-[.65rem] font-bold uppercase tracking-[.16em] text-[#893d3e]">Welcome back, Janell</span>
+            <h2 className="font-display mt-1 text-2xl text-[#33373d] sm:text-3xl">Weekday appointments are now open.</h2>
+            <p className="mt-1 text-sm text-[#676767]">Waxing, lash, and brow services are available to book now.</p>
+          </div>
+          <Link href="/book?provider=janell" className="button-secondary shrink-0 !min-h-[44px] !rounded-[3px]">Book with Janell <ArrowRight size={16} /></Link>
         </div>
       </section>
 
@@ -53,7 +54,7 @@ export default function Home() {
             <span className="eyebrow">Give a little Tupelo Honey</span>
             <h2 className="font-display mt-5 text-5xl leading-none text-[#33373d] sm:text-6xl">The Perfect Gift!</h2>
             <p className="mt-6 max-w-2xl text-base leading-8 text-[#676767]">Give the gift of relaxation and self-care. Whether it’s for a special occasion or just because, a Tupelo Honey gift card is an easy way to make someone’s day a little sweeter.</p>
-            <a href="https://squareup.com/gift/VCQDNPYY0EWDH/order" target="_blank" rel="noreferrer" className="button-primary mt-8 !rounded-[3px]">Purchase a Gift Card <ArrowRight size={16} /></a>
+            <Link href="/gift-cards" className="button-primary mt-8 !rounded-[3px]">Purchase a Gift Card <ArrowRight size={16} /></Link>
           </div>
         </div>
       </section>
