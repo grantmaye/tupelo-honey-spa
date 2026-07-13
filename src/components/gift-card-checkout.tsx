@@ -15,9 +15,9 @@ type SquareWindow = Window & { Square?: { payments: (applicationId: string, loca
 
 const presetAmounts = [25, 50, 100, 150];
 
-type GiftCardCheckoutProps = { applicationId: string; locationId: string };
+type GiftCardCheckoutProps = { applicationId: string; locationId: string; environment: "sandbox" | "production" };
 
-export function GiftCardCheckout({ applicationId, locationId }: GiftCardCheckoutProps) {
+export function GiftCardCheckout({ applicationId, locationId, environment }: GiftCardCheckoutProps) {
   const configured = Boolean(applicationId && locationId);
   const cardRef = useRef<SquareCard | null>(null);
   const [scriptReady, setScriptReady] = useState(false);
@@ -115,7 +115,7 @@ export function GiftCardCheckout({ applicationId, locationId }: GiftCardCheckout
 
   return (
     <>
-      {configured && <Script src="https://web.squarecdn.com/v1/square.js" strategy="afterInteractive" onLoad={() => setScriptReady(true)} />}
+      {configured && <Script src={environment === "sandbox" ? "https://sandbox.web.squarecdn.com/v1/square.js" : "https://web.squarecdn.com/v1/square.js"} strategy="afterInteractive" onLoad={() => setScriptReady(true)} />}
       <section className="bg-[#ead6cf] py-16 text-center sm:py-24">
         <div className="container-site max-w-4xl">
           <span className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-[#e3af23] text-white"><Gift size={25} /></span>
