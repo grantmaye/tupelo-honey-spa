@@ -4,9 +4,9 @@ A modern, mobile-first website and booking experience for [Tupelo Honey Spa](htt
 
 ## Current phase
 
-The website is fully implemented with production-oriented UI, responsive pages, service discovery, individual team profiles, an on-site gift card checkout, and a complete demo booking flow. Square is intentionally isolated behind server-side integration boundaries and is not connected yet.
+The website is fully implemented with production-oriented UI, responsive pages, service discovery, individual team profiles, an on-site gift card checkout, and a complete demo booking flow. Square Sandbox credentials are configured in Vercel, and the server-side connection diagnostic is available at `/api/square/health`. Appointment creation remains in demo mode until the Sandbox catalog and bookable staff data are validated and mapped.
 
-Without production environment credentials, the demo does not create appointments, charge cards, send gift cards, or send contact messages.
+Without production environment credentials, the demo does not create real appointments, charge real cards, send live gift cards, or send contact messages.
 
 ## Local development
 
