@@ -1,6 +1,7 @@
 import { ArrowRight, Gift, Sparkles, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { getWordPressHomeContent } from "@/lib/wordpress";
 
 const offerings = [
   { name: "Laser & Waxing", copy: "Say hello to smooth, hair-free skin.", category: "Waxing" },
@@ -12,7 +13,8 @@ const offerings = [
   { name: "Massage Therapy", copy: "Relax, rejuvenate, and unwind.", category: "Massage" },
 ];
 
-export default function Home() {
+export default async function Home() {
+  const content = await getWordPressHomeContent();
   return (
     <>
       <Link href="/services?category=Laser" className="flex min-h-16 items-center justify-center gap-5 bg-[#893d3e] px-5 text-center text-base font-medium text-white sm:text-xl">
@@ -24,7 +26,7 @@ export default function Home() {
       <section className="relative overflow-hidden bg-[#00032c]">
         <div className="relative mx-auto aspect-[1363/472] min-h-[250px] max-h-[590px] w-full max-w-[1536px]">
           <Image
-            src="https://tupelohoneyspa.com/wp-content/uploads/2023/09/tupelo-home-hero-1-1536x533.jpg"
+            src={content.heroImage}
             alt="Tupelo Honey Spa and Wellness Collective"
             fill
             priority
@@ -38,8 +40,8 @@ export default function Home() {
         <div className="container-site flex flex-col gap-4 text-center sm:flex-row sm:items-center sm:justify-between sm:text-left">
           <div>
             <span className="text-[.65rem] font-bold uppercase tracking-[.16em] text-[#893d3e]">Welcome back, Janell</span>
-            <h2 className="font-display mt-1 text-2xl text-[#33373d] sm:text-3xl">Weekday appointments are now open.</h2>
-            <p className="mt-1 text-sm text-[#676767]">Waxing, lash, and brow services are available to book now.</p>
+            <h2 className="font-display mt-1 text-2xl text-[#33373d] sm:text-3xl">{content.announcementTitle}</h2>
+            <p className="mt-1 line-clamp-2 text-sm text-[#676767]">{content.announcementCopy}</p>
           </div>
           <Link href="/book?provider=janell" className="button-secondary shrink-0 !min-h-[44px] !rounded-[3px]">Book with Janell <ArrowRight size={16} /></Link>
         </div>
@@ -52,8 +54,8 @@ export default function Home() {
           </div>
           <div>
             <span className="eyebrow">Give a little Tupelo Honey</span>
-            <h2 className="font-display mt-5 text-5xl leading-none text-[#33373d] sm:text-6xl">The Perfect Gift!</h2>
-            <p className="mt-6 max-w-2xl text-base leading-8 text-[#676767]">Give the gift of relaxation and self-care. Whether it’s for a special occasion or just because, a Tupelo Honey gift card is an easy way to make someone’s day a little sweeter.</p>
+            <h2 className="font-display mt-5 text-5xl leading-none text-[#33373d] sm:text-6xl">{content.giftTitle}</h2>
+            <p className="mt-6 max-w-2xl text-base leading-8 text-[#676767]">{content.giftCopy}</p>
             <Link href="/gift-cards" className="button-primary mt-8 !rounded-[3px]">Purchase a Gift Card <ArrowRight size={16} /></Link>
           </div>
         </div>
@@ -62,15 +64,15 @@ export default function Home() {
       <section className="bg-[#00032c] py-20 text-center text-white sm:py-28">
         <div className="container-site max-w-4xl">
           <span className="text-xs font-bold uppercase tracking-[.18em] text-[#e3af23]">Our purpose</span>
-          <h2 className="font-display mt-5 text-5xl sm:text-7xl">Spa & Wellness Collective</h2>
-          <p className="mx-auto mt-7 max-w-3xl text-base leading-8 text-white/75 sm:text-lg">At Tupelo Honey, we pride ourselves on creating a comfortable oasis where clients can take a break from the world. We’re dedicated to nurturing inner well-being, enhancing natural beauty, and helping every guest feel like the best version of themselves.</p>
+          <h2 className="font-display mt-5 text-5xl sm:text-7xl">{content.purposeTitle}</h2>
+          <p className="mx-auto mt-7 max-w-3xl text-base leading-8 text-white/75 sm:text-lg">{content.purposeCopy}</p>
           <Link href="/about" className="button-light mt-9 !rounded-[3px]">Learn About Tupelo Honey <ArrowRight size={16} /></Link>
         </div>
       </section>
 
       <section className="bg-[#f6f5e9] py-20 sm:py-24">
         <div className="container-site">
-          <div className="text-center"><span className="eyebrow justify-center before:hidden">Services for every body</span><h2 className="font-display mt-4 text-5xl text-[#33373d] sm:text-6xl">What We Offer</h2></div>
+          <div className="text-center"><span className="eyebrow justify-center before:hidden">Services for every body</span><h2 className="font-display mt-4 text-5xl text-[#33373d] sm:text-6xl">{content.offeringsTitle}</h2></div>
           <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {offerings.map((offering, index) => (
               <Link key={offering.name} href={`/services?category=${encodeURIComponent(offering.category)}`} className={`group flex min-h-[235px] flex-col justify-between rounded-2xl border p-7 transition hover:-translate-y-1 hover:shadow-[0_18px_50px_#00032c12] ${index === 6 ? "border-[#893d3e] bg-[#893d3e] text-white lg:col-start-2" : "border-[#e4ded4] bg-white text-[#33373d]"}`}>

@@ -1,12 +1,29 @@
 # Tupelo Honey Spa
 
-A modern, mobile-first website and booking experience for [Tupelo Honey Spa](https://tupelohoneyspa.com), a spa and wellness collective in Elma, New York.
+A modern, mobile-first website and on-site booking experience for [Tupelo Honey Spa](https://tupelohoneyspa.com), a spa and wellness collective in Elma, New York.
 
-## Current phase
+## Current integration status
 
-The website is fully implemented with production-oriented UI, responsive pages, service discovery, individual team profiles, an on-site gift card checkout, and a complete demo booking flow. Square Sandbox credentials are configured in Vercel, and the server-side connection diagnostic is available at `/api/square/health`. Appointment creation remains in demo mode until the Sandbox catalog and bookable staff data are validated and mapped.
+- Square production is the live source for service names, prices, durations, practitioner assignments, and appointment availability at the Elma location.
+- WordPress is the live editorial CMS for the homepage hero and announcement, gift-card and brand copy, services introduction, special-events content, and practitioner photos, roles, and biographies.
+- Appointment creation remains deliberately disabled until a controlled production booking is tested and approved.
+- Holli Simme continues to use her independent Square booking site by design.
+- Contact-form delivery remains deferred until the production domain and sending domain are configured.
 
-Without production environment credentials, the demo does not create real appointments, charge real cards, send live gift cards, or send contact messages.
+## Editing website content
+
+Authorized editors continue to use the existing WordPress dashboard and Elementor. Publishing a WordPress page updates the corresponding content on the Next.js site; WordPress content is cached for up to five minutes, with local fallbacks so a temporary WordPress outage does not blank the site.
+
+The website currently reads these WordPress pages:
+
+- `home-2` — homepage image, Janell announcement, gift-card copy, purpose statement, and offerings title
+- `services` — services-page introduction
+- `parties-special-events` — event copy and gallery
+- Practitioner pages — profile photo, professional role, and full biography
+
+For immediate refreshes, configure `WORDPRESS_REVALIDATE_SECRET` in Vercel and have WordPress send a `POST` request to `/api/revalidate/wordpress` with the same value in the `x-wordpress-revalidate-secret` header. The endpoint is intentionally unavailable without a secret.
+
+Square remains the only place to edit bookable services, pricing, durations, availability, and staff-service assignments. Those fields should not be duplicated in WordPress.
 
 ## Local development
 
@@ -17,26 +34,9 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
-## Architecture
+## Environment variables
 
-- Next.js App Router and TypeScript
-- Tailwind CSS 4
-- Server Components by default; client components only for interactive flows
-- `src/lib/booking` provider boundary for mock and future Square implementations
-- Route handlers under `src/app/api/booking`
-- Centralized service and team content in `src/data/site.ts`
-
-## Content administration
-
-The recommended production setup keeps the existing WordPress dashboard as a headless CMS. Holli or another authorized editor continues using the familiar WordPress admin to update homepage announcements, team biographies, hours, images, events, and SEO copy. The Next.js site reads those published changes through the WordPress REST API and revalidates automatically through a webhook.
-
-Square is the single source of truth for bookable service names, prices, durations, availability, and team-member service assignments. The site reads those records through the Catalog and Bookings APIs. A `catalog.version.updated` webhook invalidates the website cache after a Square catalog change so editors never need to update pricing in two systems.
-
-Until WordPress administrator access and a stable CMS URL are provided, the site uses the local fallback content in `src/data/site.ts`. Do not expose a custom unauthenticated `/admin` route; WordPress remains the authenticated editorial backend.
-
-## On-site Square gift cards
-
-The `/gift-cards` experience is complete but remains in preview mode until these variables are configured:
+Copy `.env.example` to `.env.local` and provide the appropriate environment values:
 
 ```bash
 NEXT_PUBLIC_SQUARE_APPLICATION_ID=
@@ -45,21 +45,23 @@ SQUARE_LOCATION_ID=
 SQUARE_ACCESS_TOKEN=
 SQUARE_ENVIRONMENT=sandbox
 SQUARE_API_VERSION=2026-05-20
+WORDPRESS_API_URL=https://tupelohoneyspa.com/wp-json/wp/v2
+WORDPRESS_REVALIDATE_SECRET=
 RESEND_API_KEY=
 GIFT_CARD_FROM_EMAIL="Tupelo Honey Spa <giftcards@example.com>"
 ```
 
-The server creates and pays a `GIFT_CARD` order, creates the digital card, activates it, and then delivers its redemption code by email. If creation or activation fails after payment, the route attempts an automatic full refund.
+`SQUARE_ACCESS_TOKEN`, `WORDPRESS_REVALIDATE_SECRET`, and `RESEND_API_KEY` are server-only secrets. Never prefix them with `NEXT_PUBLIC_` or commit their values.
 
-## Production integrations still required
+## Architecture
 
-- Square OAuth and production credentials for bookings and gift cards
-- Square Catalog, Team, Customers, Bookings, Payments, and webhooks
-- WordPress headless CMS connection, content models, and revalidation webhook
-- Contact form delivery
-- Analytics and consent configuration
-- Production domain and DNS
+- Next.js 16 App Router, React 19, TypeScript, and Tailwind CSS 4
+- Server Components for WordPress and Square reads
+- WordPress REST API with five-minute tagged caching and secure on-demand revalidation
+- Square Catalog, Team, Locations, and Bookings API reads behind server-only modules
+- Provider boundary under `src/lib/booking` so appointment creation can be enabled independently after the controlled test
+- Local content fallbacks in `src/data/site.ts` and `src/lib/wordpress.ts`
 
-Holli Simme continues to use her independent Square booking site by design.
+## Gift cards
 
-Contact-form delivery is intentionally deferred until the production domain and sending domain are configured.
+The on-site gift-card checkout and Square payment route are implemented. Before enabling real purchases, payment, activation, delivery email, and refund behavior should be validated with a controlled transaction. Personal-message fields are shown only when the card is being sent to someone else.
