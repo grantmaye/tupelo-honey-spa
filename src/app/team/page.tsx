@@ -3,11 +3,12 @@ import { ArrowRight, ExternalLink } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { PageHero } from "@/components/page-hero";
-import { team } from "@/data/site";
+import { getTeamWithWordPress } from "@/lib/wordpress";
 
 export const metadata: Metadata = { title: "Our Collective", description: "Meet the independent beauty and wellness specialists at Tupelo Honey Spa." };
 
-export default function TeamPage() {
+export default async function TeamPage() {
+  const team = await getTeamWithWordPress();
   return (
     <>
       <PageHero eyebrow="Our collective" title="Good people. Great at what they do." copy="An independent collective of experienced practitioners, each bringing their own specialty and all sharing the same commitment to kind, expert care." />

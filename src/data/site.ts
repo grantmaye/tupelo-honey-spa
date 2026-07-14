@@ -55,7 +55,7 @@ export const services: Service[] = [
   { slug: "honeymoon-package", name: "Honeymoon Wax Package", category: "Waxing", price: "From $140", duration: "60 min", description: "A bundled underarm, Brazilian, and leg service." },
 ];
 
-export type TeamMember = { slug: string; name: string; role: string; specialties: string[]; image: string; bio: string; externalBooking?: string };
+export type TeamMember = { slug: string; name: string; role: string; specialties: string[]; image: string; bio: string; fullBio?: string[]; externalBooking?: string };
 
 export const team: TeamMember[] = [
   { slug: "julie", name: "Julie Campanella Krembel", role: "Founder · Licensed Waxer", specialties: ["Waxing", "Brows", "Laser"], image: "https://tupelohoneyspa.com/wp-content/uploads/2023/09/julie-300.jpg", bio: "Tupelo Honey’s founder and a meticulous specialist known for warm, straightforward care and beautiful results." },

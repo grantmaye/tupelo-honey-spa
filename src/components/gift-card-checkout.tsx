@@ -149,7 +149,7 @@ export function GiftCardCheckout({ applicationId, locationId, environment }: Gif
                 <Field label="Your email" name="senderEmail" type="email" autoComplete="email" />
                 {delivery === "gift" && <><Field label="Recipient’s name" name="recipientName" /><Field label="Recipient’s email" name="recipientEmail" type="email" /></>}
               </div>
-              <label className="mt-4 block text-xs font-bold text-[#33373d]">Personal message <span className="font-normal text-[#777777]">Optional</span><textarea name="message" maxLength={300} rows={4} placeholder="A little note to make their day…" className="mt-2 w-full resize-none rounded-xl border border-[#d8cfc5] bg-white p-4 font-normal outline-none focus:border-[#893d3e]" /></label>
+              {delivery === "gift" && <label className="mt-4 block text-xs font-bold text-[#33373d]">Personal message <span className="font-normal text-[#777777]">Optional</span><textarea name="message" maxLength={300} rows={4} placeholder="A little note to make their day…" className="mt-2 w-full resize-none rounded-xl border border-[#d8cfc5] bg-white p-4 font-normal outline-none focus:border-[#893d3e]" /></label>}
             </section>
 
             <section className="paper-card p-6 sm:p-8">
