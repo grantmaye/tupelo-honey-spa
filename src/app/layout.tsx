@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist_Mono, Urbanist } from "next/font/google";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
+import { ScrollToTop } from "@/components/scroll-to-top";
 import "./globals.css";
 
 const urbanist = Urbanist({ variable: "--font-urbanist", subsets: ["latin"] });
@@ -18,6 +19,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en" className={`${urbanist.variable} ${geistMono.variable}`}>
       <body className="min-h-screen">
+        <ScrollToTop />
         <SiteHeader />
         <main>{children}</main>
         <SiteFooter />

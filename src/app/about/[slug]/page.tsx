@@ -29,8 +29,8 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
   return (
     <>
       <section className="overflow-hidden bg-[#ead6cf] py-12 sm:py-20">
-        <div className="container-site grid gap-10 lg:grid-cols-[.82fr_1.18fr] lg:items-center">
-          <div className="relative mx-auto aspect-[4/5] w-full max-w-[520px] overflow-hidden rounded-[12rem_12rem_1.5rem_1.5rem] bg-white/45">
+        <div className="container-site grid gap-10 lg:grid-cols-[360px_1fr] lg:items-center">
+          <div className="relative mx-auto aspect-[4/5] w-full max-w-[300px] overflow-hidden rounded-[10rem_10rem_1.5rem_1.5rem] bg-white/45">
             <Image src={member.image} alt={member.name} fill priority unoptimized className="object-cover object-top saturate-[.88]" />
           </div>
           <div className="max-w-2xl">

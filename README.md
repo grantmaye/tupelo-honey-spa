@@ -28,7 +28,9 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Content administration
 
-The recommended production setup keeps the existing WordPress dashboard as a headless CMS. Holli or another authorized editor continues using the familiar WordPress admin to update homepage announcements, team biographies, services, hours, and images. The Next.js site reads those published changes through the WordPress REST API and revalidates automatically through a webhook.
+The recommended production setup keeps the existing WordPress dashboard as a headless CMS. Holli or another authorized editor continues using the familiar WordPress admin to update homepage announcements, team biographies, hours, images, events, and SEO copy. The Next.js site reads those published changes through the WordPress REST API and revalidates automatically through a webhook.
+
+Square is the single source of truth for bookable service names, prices, durations, availability, and team-member service assignments. The site reads those records through the Catalog and Bookings APIs. A `catalog.version.updated` webhook invalidates the website cache after a Square catalog change so editors never need to update pricing in two systems.
 
 Until WordPress administrator access and a stable CMS URL are provided, the site uses the local fallback content in `src/data/site.ts`. Do not expose a custom unauthenticated `/admin` route; WordPress remains the authenticated editorial backend.
 
@@ -59,3 +61,5 @@ The server creates and pays a `GIFT_CARD` order, creates the digital card, activ
 - Production domain and DNS
 
 Holli Simme continues to use her independent Square booking site by design.
+
+Contact-form delivery is intentionally deferred until the production domain and sending domain are configured.

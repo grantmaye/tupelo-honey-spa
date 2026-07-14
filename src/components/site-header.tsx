@@ -3,7 +3,7 @@
 import { ChevronDown, Menu, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { type FocusEvent, useState } from "react";
 import { team } from "@/data/site";
 import { BrandMark } from "./brand-mark";
 
@@ -18,7 +18,9 @@ const links = [
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(false);
+  const [desktopAboutOpen, setDesktopAboutOpen] = useState(false);
   const pathname = usePathname();
+  const aboutActive = pathname.startsWith("/about") || pathname === "/team";
 
   const navClass = (href: string) =>
     `border-b-2 py-2 text-[.92rem] font-medium text-black transition-colors hover:text-[#893d3e] ${
@@ -30,6 +32,10 @@ export function SiteHeader() {
     setAboutOpen(false);
   }
 
+  function handleDesktopBlur(event: FocusEvent<HTMLDivElement>) {
+    if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setDesktopAboutOpen(false);
+  }
+
   return (
     <header className="sticky top-0 z-50 border-b border-black/5 bg-white/96 backdrop-blur-xl">
       <div className="container-site flex h-[84px] items-center justify-between lg:h-[118px]">
@@ -38,17 +44,17 @@ export function SiteHeader() {
         <nav aria-label="Primary navigation" className="hidden items-center gap-7 xl:flex">
           <Link href="/" className={navClass("/")}>Home</Link>
 
-          <div className="group relative flex items-center" data-active={pathname.startsWith("/about") || pathname === "/team"}>
-            <Link href="/about" className={`flex items-center gap-1.5 ${navClass("/about")} group-data-[active=true]:border-[#33373d]`}>
+          <div className="relative flex items-center" onMouseEnter={() => setDesktopAboutOpen(true)} onMouseLeave={() => setDesktopAboutOpen(false)} onFocus={() => setDesktopAboutOpen(true)} onBlur={handleDesktopBlur}>
+            <Link href="/about" onClick={() => setDesktopAboutOpen(false)} className={`flex items-center gap-1.5 border-b-2 py-2 text-[.92rem] font-medium text-black transition-colors hover:text-[#893d3e] ${aboutActive ? "border-[#33373d]" : "border-transparent"}`} aria-expanded={desktopAboutOpen}>
               About Us <ChevronDown size={14} aria-hidden="true" />
             </Link>
-            <div className="invisible absolute left-1/2 top-full w-64 -translate-x-1/2 translate-y-2 pt-4 opacity-0 transition duration-150 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
+            <div className={`absolute left-1/2 top-full w-64 -translate-x-1/2 pt-4 transition duration-150 ${desktopAboutOpen ? "visible translate-y-0 opacity-100" : "invisible translate-y-2 opacity-0"}`}>
               <div className="rounded-2xl border border-[#e4ded4] bg-white p-2 shadow-[0_20px_55px_#00032c1a]">
-                <Link href="/about" className="block rounded-xl px-4 py-2.5 text-sm font-semibold hover:bg-[#f6f5e9]">Our Story</Link>
-                <Link href="/team" className="block rounded-xl px-4 py-2.5 text-sm font-semibold hover:bg-[#f6f5e9]">Meet the Collective</Link>
+                <Link href="/about" onClick={() => setDesktopAboutOpen(false)} className="block rounded-xl px-4 py-2.5 text-sm font-semibold hover:bg-[#f6f5e9]">Our Story</Link>
+                <Link href="/team" onClick={() => setDesktopAboutOpen(false)} className="block rounded-xl px-4 py-2.5 text-sm font-semibold hover:bg-[#f6f5e9]">Meet the Collective</Link>
                 <div className="my-2 border-t border-[#e4ded4]" />
                 {team.map((member) => (
-                  <Link key={member.slug} href={`/about/${member.slug}`} className="block rounded-xl px-4 py-2 text-sm text-[#676767] hover:bg-[#ead6cf]/55 hover:text-[#893d3e]">
+                  <Link key={member.slug} href={`/about/${member.slug}`} onClick={() => setDesktopAboutOpen(false)} className="block rounded-xl px-4 py-2 text-sm text-[#676767] hover:bg-[#ead6cf]/55 hover:text-[#893d3e]">
                     {member.name}
                   </Link>
                 ))}
