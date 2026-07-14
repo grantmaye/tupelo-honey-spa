@@ -16,7 +16,7 @@ export default function TeamPage() {
           {team.map((member, index) => (
             <article key={member.slug} className={index === 0 ? "sm:col-span-2 lg:col-span-1" : ""}>
               <Link href={`/about/${member.slug}`} className="group block">
-                <div className="relative mx-auto aspect-[4/5] w-full max-w-[300px] overflow-hidden rounded-[10rem_10rem_1.5rem_1.5rem] bg-[#ead6cf]">
+                <div className="relative mx-auto aspect-[4/5] w-full max-w-[240px] overflow-hidden rounded-[10rem_10rem_1.5rem_1.5rem] bg-[#ead6cf]">
                   <Image src={member.image} alt={member.name} fill unoptimized className="object-cover object-top saturate-[.8] transition duration-500 group-hover:scale-[1.025]" />
                 </div>
                 <p className="mt-6 text-[.65rem] font-bold uppercase tracking-[.14em] text-[#893d3e]">{member.role}</p>
