@@ -1,4 +1,4 @@
-import { team, type TeamMember } from "@/data/site";
+import { activeTeam, type TeamMember } from "@/data/site";
 
 type WordPressPage = {
   slug?: string;
@@ -117,7 +117,7 @@ export async function getWordPressServicesIntro(): Promise<WordPressServicesIntr
 }
 
 export async function getTeamWithWordPress(): Promise<TeamMember[]> {
-  return Promise.all(team.map(getTeamMemberWithWordPress));
+  return Promise.all(activeTeam.map(getTeamMemberWithWordPress));
 }
 
 export async function getTeamMemberWithWordPress(member: TeamMember): Promise<TeamMember> {

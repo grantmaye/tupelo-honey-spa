@@ -80,7 +80,9 @@ export async function GET() {
       services: synced.services.length,
       providers: synced.providers.length,
       categories: synced.categories.length,
-      servicesWithoutAssignedProviders: synced.services.filter((service) => !service.providerIds.length).length,
+      servicesWithoutAssignedProviders: synced.services.filter((service) =>
+        !synced.providers.some((provider) => provider.serviceSlugs.includes(service.slug)),
+      ).length,
     } : undefined,
   }, { status: connected ? 200 : 502 });
 }

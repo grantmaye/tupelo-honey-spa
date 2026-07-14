@@ -63,8 +63,16 @@ export async function getSquareBookingData(): Promise<SquareBookingData> {
     const categoryNames = new Map(categoryObjects.flatMap((category) =>
       category.id && category.category_data?.name ? [[category.id, category.category_data.name] as const] : [],
     ));
-    const services = mapServices(items, categoryNames, locationId);
-    const providers = mapProviders(profiles, services);
+    const allServices = mapServices(items, categoryNames, locationId);
+    const allProviders = mapProviders(profiles, allServices);
+    const services = allServices.filter((service) =>
+      !service.providerIds.length || allProviders.some((provider) => service.providerIds.includes(provider.squareId)),
+    );
+    const visibleServiceSlugs = new Set(services.map((service) => service.slug));
+    const providers = allProviders.flatMap((provider) => {
+      const serviceSlugs = provider.serviceSlugs.filter((slug) => visibleServiceSlugs.has(slug));
+      return serviceSlugs.length ? [{ ...provider, serviceSlugs }] : [];
+    });
 
     if (!services.length) return fallbackData();
     return {
@@ -170,7 +178,7 @@ function mapProviders(profiles: TeamProfile[], services: SquareService[]): Squar
   return profiles.flatMap((profile) => {
     if (!profile.team_member_id || !profile.display_name || !profile.is_bookable) return [];
     const member = matchTeamMember(profile.display_name);
-    if (member?.externalBooking) return [];
+    if (member?.externalBooking || member?.archived) return [];
     const serviceSlugs = services
       .filter((service) => !service.providerIds.length || service.providerIds.includes(profile.team_member_id!))
       .map((service) => service.slug);
@@ -195,7 +203,7 @@ function matchTeamMember(displayName: string) {
 }
 
 function fallbackData(): SquareBookingData {
-  const providers: SquareProvider[] = team.filter((member) => !member.externalBooking).map((member) => ({
+  const providers: SquareProvider[] = team.filter((member) => !member.externalBooking && !member.archived).map((member) => ({
     squareId: "",
     slug: member.slug,
     name: member.name,

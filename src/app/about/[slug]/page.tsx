@@ -3,7 +3,7 @@ import { ArrowLeft, ArrowRight, ExternalLink, Sparkles } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { team } from "@/data/site";
+import { activeTeam } from "@/data/site";
 import { getSquareBookingData } from "@/lib/square/catalog";
 import { getTeamMemberWithWordPress } from "@/lib/wordpress";
 
@@ -12,12 +12,12 @@ type ProfilePageProps = { params: Promise<{ slug: string }> };
 export const dynamic = "force-dynamic";
 
 export function generateStaticParams() {
-  return team.map((member) => ({ slug: member.slug }));
+  return activeTeam.map((member) => ({ slug: member.slug }));
 }
 
 export async function generateMetadata({ params }: ProfilePageProps): Promise<Metadata> {
   const { slug } = await params;
-  const member = team.find((item) => item.slug === slug);
+  const member = activeTeam.find((item) => item.slug === slug);
   if (!member) return {};
   return {
     title: member.name,
@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: ProfilePageProps): Promise<Me
 
 export default async function ProfilePage({ params }: ProfilePageProps) {
   const [{ slug }, square] = await Promise.all([params, getSquareBookingData()]);
-  const fallbackMember = team.find((item) => item.slug === slug);
+  const fallbackMember = activeTeam.find((item) => item.slug === slug);
   if (!fallbackMember) notFound();
   const member = await getTeamMemberWithWordPress(fallbackMember);
   const squareProvider = square.providers.find((provider) => provider.slug === member.slug);

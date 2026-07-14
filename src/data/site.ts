@@ -55,7 +55,7 @@ export const services: Service[] = [
   { slug: "honeymoon-package", name: "Honeymoon Wax Package", category: "Waxing", price: "From $140", duration: "60 min", description: "A bundled underarm, Brazilian, and leg service." },
 ];
 
-export type TeamMember = { slug: string; name: string; role: string; specialties: string[]; image: string; bio: string; fullBio?: string[]; externalBooking?: string };
+export type TeamMember = { slug: string; name: string; role: string; specialties: string[]; image: string; bio: string; fullBio?: string[]; externalBooking?: string; archived?: boolean };
 
 export const team: TeamMember[] = [
   { slug: "julie", name: "Julie Campanella Krembel", role: "Founder · Licensed Waxer", specialties: ["Waxing", "Brows", "Laser"], image: "https://tupelohoneyspa.com/wp-content/uploads/2023/09/julie-300.jpg", bio: "Tupelo Honey’s founder and a meticulous specialist known for warm, straightforward care and beautiful results." },
@@ -64,9 +64,11 @@ export const team: TeamMember[] = [
   { slug: "jillian", name: "Jillian Blaszkowiak", role: "Licensed Massage Therapist", specialties: ["Massage", "Relaxation"], image: "https://tupelohoneyspa.com/wp-content/uploads/2023/09/jillian-300.jpg", bio: "Restorative massage in a calm, supportive environment." },
   { slug: "danni", name: "Danielle “Danni” Domanowski", role: "Reiki Practitioner", specialties: ["Reiki", "Sound Healing"], image: "https://tupelohoneyspa.com/wp-content/uploads/2023/09/danni-300.jpg", bio: "Grounding energy work designed to help you slow down, reconnect, and leave lighter." },
   { slug: "abby", name: "Abby Brown", role: "Licensed Esthetician", specialties: ["Facials", "Skin"], image: "https://tupelohoneyspa.com/wp-content/uploads/2023/09/abby-300.jpg", bio: "Customized skincare with an approachable, caring touch." },
-  { slug: "alex", name: "Alexandria Brown", role: "Licensed Esthetician", specialties: ["Facials", "Skin"], image: "https://tupelohoneyspa.com/wp-content/uploads/2025/01/IMG_3443.jpeg", bio: "Results-minded facials grounded in comfort, education, and care." },
+  { slug: "alex", name: "Alexandria Brown", role: "Licensed Esthetician", specialties: ["Facials", "Skin"], image: "https://tupelohoneyspa.com/wp-content/uploads/2025/01/IMG_3443.jpeg", bio: "Results-minded facials grounded in comfort, education, and care.", archived: true },
   { slug: "heather", name: "Heather Roycroft", role: "Licensed Esthetician", specialties: ["Facials", "Skin"], image: "https://tupelohoneyspa.com/wp-content/uploads/2025/03/heather-roycroft.jpeg", bio: "Personalized skin treatments that make good skincare feel simple." },
 ];
+
+export const activeTeam = team.filter((member) => !member.archived);
 
 export const categoryIntro: Record<string, string> = {
   "Brows & Lashes": "Subtle definition, expert shaping, and enhancements that still look like you.",

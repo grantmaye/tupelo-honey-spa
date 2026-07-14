@@ -4,7 +4,7 @@ import { ChevronDown, Menu, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { type FocusEvent, useState } from "react";
-import { team } from "@/data/site";
+import { activeTeam } from "@/data/site";
 import { BrandMark } from "./brand-mark";
 
 const links = [
@@ -53,7 +53,7 @@ export function SiteHeader() {
                 <Link href="/about" onClick={() => setDesktopAboutOpen(false)} className="block rounded-xl px-4 py-2.5 text-sm font-semibold hover:bg-[#f6f5e9]">Our Story</Link>
                 <Link href="/team" onClick={() => setDesktopAboutOpen(false)} className="block rounded-xl px-4 py-2.5 text-sm font-semibold hover:bg-[#f6f5e9]">Meet the Collective</Link>
                 <div className="my-2 border-t border-[#e4ded4]" />
-                {team.map((member) => (
+                {activeTeam.map((member) => (
                   <Link key={member.slug} href={`/about/${member.slug}`} onClick={() => setDesktopAboutOpen(false)} className="block rounded-xl px-4 py-2 text-sm text-[#676767] hover:bg-[#ead6cf]/55 hover:text-[#893d3e]">
                     {member.name}
                   </Link>
@@ -84,7 +84,7 @@ export function SiteHeader() {
               <div className="border-b border-[#e4ded4] bg-[#f6f5e9] px-3 py-2">
                 <Link href="/about" onClick={closeMenu} className="block rounded-lg px-3 py-3 font-semibold">Our Story</Link>
                 <Link href="/team" onClick={closeMenu} className="block rounded-lg px-3 py-3 font-semibold">Meet the Collective</Link>
-                {team.map((member) => <Link key={member.slug} href={`/about/${member.slug}`} onClick={closeMenu} className="block rounded-lg px-3 py-2.5 text-sm text-[#676767]">{member.name}</Link>)}
+                {activeTeam.map((member) => <Link key={member.slug} href={`/about/${member.slug}`} onClick={closeMenu} className="block rounded-lg px-3 py-2.5 text-sm text-[#676767]">{member.name}</Link>)}
               </div>
             )}
             {links.slice(1).map((link) => <Link key={link.href} href={link.href} onClick={closeMenu} className="border-b border-[#e4ded4] py-4 text-lg font-semibold">{link.label}</Link>)}
