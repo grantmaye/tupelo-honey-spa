@@ -118,7 +118,7 @@ export function GiftCardCheckout({ applicationId, locationId, environment }: Gif
       {configured && <Script src={environment === "sandbox" ? "https://sandbox.web.squarecdn.com/v1/square.js" : "https://web.squarecdn.com/v1/square.js"} strategy="afterInteractive" onLoad={() => setScriptReady(true)} />}
       <section className="bg-[#ead6cf] py-16 text-center sm:py-24">
         <div className="container-site max-w-4xl">
-          <span className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-[#e3af23] text-white"><Gift size={25} /></span>
+          <span className="mx-auto grid h-11 w-11 place-items-center rounded-full bg-[#e3af23] text-white sm:h-14 sm:w-14"><Gift className="h-5 w-5 sm:h-[25px] sm:w-[25px]" /></span>
           <p className="mt-7 text-xs font-bold uppercase tracking-[.16em] text-[#893d3e]">A little time for themselves</p>
           <h1 className="font-display mt-4 text-5xl leading-none text-[#33373d] sm:text-7xl">Give the gift of feeling good.</h1>
           <p className="mx-auto mt-6 max-w-2xl text-base leading-8 text-[#676767]">Choose an amount, add a personal note, and send a digital Tupelo Honey gift card without leaving the website.</p>
