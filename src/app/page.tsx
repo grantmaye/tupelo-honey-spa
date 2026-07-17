@@ -43,7 +43,7 @@ export default async function Home() {
             <h2 className="font-display mt-1 text-2xl text-[#33373d] sm:text-3xl">Meet our new YAG laser.</h2>
             <p className="mt-1 line-clamp-2 text-sm text-[#676767]">Ready for smoother skin? Book your laser appointment today.</p>
           </div>
-          <Link href="/book?service=laser-consultation" className="button-secondary shrink-0 !min-h-[44px] !rounded-[3px]">Book Laser <ArrowRight size={16} /></Link>
+          <Link href="/book?service=laser-hair-removal-consultation" className="button-secondary shrink-0 !min-h-[44px] !rounded-[3px]">Book Laser <ArrowRight size={16} /></Link>
         </div>
       </section>
 
