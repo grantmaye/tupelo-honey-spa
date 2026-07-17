@@ -6,9 +6,9 @@ A modern, mobile-first website and on-site booking experience for [Tupelo Honey 
 
 - Square production is the live source for service names, prices, durations, practitioner assignments, and appointment availability at the Elma location.
 - WordPress is the live editorial CMS for the homepage hero and announcement, gift-card and brand copy, services introduction, special-events content, and practitioner photos, roles, and biographies.
-- Appointment creation remains deliberately disabled until a controlled production booking is tested and approved.
+- Appointment creation is implemented through Square and must pass the controlled production test in `docs/GO-LIVE-CHECKLIST.md` before DNS cutover.
 - Holli Simme continues to use her independent Square booking site by design.
-- Contact-form delivery remains deferred until the production domain and sending domain are configured.
+- Contact-form and gift-card delivery use Resend and require a verified sender plus the production environment variables listed below.
 
 ## Editing website content
 
@@ -46,9 +46,12 @@ SQUARE_ACCESS_TOKEN=
 SQUARE_ENVIRONMENT=sandbox
 SQUARE_API_VERSION=2026-05-20
 WORDPRESS_API_URL=https://tupelohoneyspa.com/wp-json/wp/v2
+NEXT_PUBLIC_WORDPRESS_SITE_URL=https://tupelohoneyspa.com
 WORDPRESS_REVALIDATE_SECRET=
 RESEND_API_KEY=
 GIFT_CARD_FROM_EMAIL="Tupelo Honey Spa <giftcards@example.com>"
+CONTACT_FROM_EMAIL="Tupelo Honey Spa <hello@example.com>"
+CONTACT_TO_EMAIL=tupelohoneyspa@gmail.com
 ```
 
 `SQUARE_ACCESS_TOKEN`, `WORDPRESS_REVALIDATE_SECRET`, and `RESEND_API_KEY` are server-only secrets. Never prefix them with `NEXT_PUBLIC_` or commit their values.
@@ -59,8 +62,13 @@ GIFT_CARD_FROM_EMAIL="Tupelo Honey Spa <giftcards@example.com>"
 - Server Components for WordPress and Square reads
 - WordPress REST API with five-minute tagged caching and secure on-demand revalidation
 - Square Catalog, Team, Locations, and Bookings API reads behind server-only modules
-- Provider boundary under `src/lib/booking` so appointment creation can be enabled independently after the controlled test
+- Provider boundary under `src/lib/booking` for live availability, customer matching/creation, and idempotent appointment creation
 - Local content fallbacks in `src/data/site.ts` and `src/lib/wordpress.ts`
+
+## Production launch
+
+- [Go-live checklist](docs/GO-LIVE-CHECKLIST.md)
+- [Production launch and rollback SOP](docs/PRODUCTION-LAUNCH-SOP.md)
 
 ## Gift cards
 

@@ -1,4 +1,5 @@
 import { activeTeam, type TeamMember } from "@/data/site";
+import { rewriteWordPressUrl, wordpressSiteUrl, wordpressUrl } from "@/lib/wordpress-url";
 
 type WordPressPage = {
   slug?: string;
@@ -40,10 +41,10 @@ const profileSlugs: Record<string, string> = {
   heather: "heather-roycroft",
 };
 
-const wordpressBase = process.env.WORDPRESS_API_URL ?? "https://tupelohoneyspa.com/wp-json/wp/v2";
+const wordpressBase = (process.env.WORDPRESS_API_URL ?? `${wordpressSiteUrl}/wp-json/wp/v2`).replace(/\/$/, "");
 
 const homeFallback: WordPressHomeContent = {
-  heroImage: "https://tupelohoneyspa.com/wp-content/uploads/2023/09/tupelo-home-hero-1-1536x533.jpg",
+  heroImage: wordpressUrl("/wp-content/uploads/2023/09/tupelo-home-hero-1-1536x533.jpg"),
   announcementTitle: "Weekday appointments are now open.",
   announcementCopy: "Waxing, lash, and brow services are available to book now.",
   giftTitle: "The Perfect Gift!",
@@ -60,9 +61,9 @@ const eventsFallback: WordPressSpecialEventsContent = {
     "Our staff has an abundance of talents to share. Send us a note and let’s create something together.",
   ],
   images: [
-    "https://tupelohoneyspa.com/wp-content/uploads/2022/08/pse-1.jpg",
-    "https://tupelohoneyspa.com/wp-content/uploads/2022/08/pse-2.jpg",
-    "https://tupelohoneyspa.com/wp-content/uploads/2022/08/pse-3.jpg",
+    wordpressUrl("/wp-content/uploads/2022/08/pse-1.jpg"),
+    wordpressUrl("/wp-content/uploads/2022/08/pse-2.jpg"),
+    wordpressUrl("/wp-content/uploads/2022/08/pse-3.jpg"),
   ],
 };
 
@@ -135,7 +136,7 @@ export async function getTeamMemberWithWordPress(member: TeamMember): Promise<Te
 
     return {
       ...member,
-      image: image || member.image,
+      image: rewriteWordPressUrl(image || member.image),
       role: role || member.role,
       fullBio: fullBio.length ? fullBio : member.fullBio,
     };
@@ -175,7 +176,7 @@ function extractSection(html: string, titlePattern: RegExp) {
 }
 
 function extractImages(html: string) {
-  return [...new Set([...html.matchAll(/<img[^>]+src=["']([^"']+)["']/gi)].map((match) => match[1]).filter(Boolean))];
+  return [...new Set([...html.matchAll(/<img[^>]+src=["']([^"']+)["']/gi)].map((match) => rewriteWordPressUrl(match[1])).filter(Boolean))];
 }
 
 function extractBiography(html: string) {
