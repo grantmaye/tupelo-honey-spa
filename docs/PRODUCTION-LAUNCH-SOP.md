@@ -13,7 +13,7 @@ State captured July 16, 2026:
 - Apex `A`: `157.245.0.152`, TTL 1,800 seconds.
 - `www`: CNAME to `tupelohoneyspa.com`, TTL 1,800 seconds.
 - `cms.tupelohoneyspa.com`: not yet created.
-- Authoritative DNS uses DigiCert DNS nameservers; do not replace them during this launch.
+- Authoritative DNS initially uses DigiCert DNS nameservers. The approved target is a client-owned Cloudflare zone, with Namecheap remaining the registrar.
 - No apex MX records were returned during preflight. The website contact destination is currently Gmail, not domain-hosted inbox delivery.
 - WordPress and its REST API are currently served from the apex hostname.
 - Vercel production project: `old-team-m/tupelo-honey-spa` (`prj_DK4gYhLvxOBoVN7RrwxfwCzPxlik`).
@@ -42,11 +42,26 @@ Target: T-90 to T-60 minutes.
 
 Abort this phase if the Cloudways backup does not complete or the DNS zone cannot be recovered.
 
+## Phase 1A — Move authoritative DNS to Cloudflare
+
+Complete this before changing any website destination records.
+
+1. Prefer a Cloudflare account owned by the client’s business email. Invite M1 with delegated administrative access instead of making M1 the permanent zone owner.
+2. Add `tupelohoneyspa.com` to Cloudflare and select the appropriate plan.
+3. Let Cloudflare scan the zone, then manually compare every A, AAAA, CNAME, MX, TXT, SRV, CAA, and verification record against the exported source zone.
+4. Preserve the legacy website destination during this phase: apex `A` remains `157.245.0.152` and `www` remains a CNAME to the apex.
+5. If DNSSEC is enabled at the current provider/registrar, follow Cloudflare’s onboarding instructions to remove the old DS configuration before the nameserver change.
+6. At Namecheap, change only the nameserver setting to the two nameservers assigned by Cloudflare. Do not create production host records in Namecheap Advanced DNS after delegation.
+7. Wait until Cloudflare reports the zone as **Active**. Verify the authoritative nameservers publicly and confirm the legacy website still works from two networks.
+8. Keep website and `cms` records **DNS only** (gray cloud) throughout launch validation. This uses Cloudflare for authoritative DNS without stacking Cloudflare’s reverse proxy in front of Vercel.
+
+Do not continue if Cloudflare is not Active, any source record is missing, or the legacy site/email behavior changed after delegation. Nameserver propagation can outlast tonight’s change window; if it does, stop with the legacy destination intact and resume after authority is stable.
+
 ## Phase 2 — Establish the headless WordPress origin
 
 Target: T-60 to T-40 minutes.
 
-1. In DNS, create `cms.tupelohoneyspa.com` as an `A` record to `157.245.0.152`.
+1. In Cloudflare DNS, create `cms.tupelohoneyspa.com` as a DNS-only `A` record to `157.245.0.152`.
 2. In Cloudways, add `cms.tupelohoneyspa.com` to the existing WordPress application as an additional/canonical domain as appropriate.
 3. Provision and validate TLS for `cms.tupelohoneyspa.com`.
 4. If WordPress `home`/`siteurl` is changed to `cms`, take the database backup first and verify `/wp-admin` login immediately afterward.
@@ -110,8 +125,8 @@ Target: T-10 to T+30 minutes.
 2. Copy the exact DNS targets Vercel displays at launch time.
 3. Ensure Vercel shows the intended production deployment for both hostnames.
 4. Record the start time.
-5. Change the apex `A` record from `157.245.0.152` to Vercel’s required value.
-6. Change `www` only as Vercel instructs. Preserve nameservers, verification TXT records, and every unrelated record.
+5. In Cloudflare DNS, change the apex `A` record from `157.245.0.152` to Vercel’s required value and leave Proxy status **DNS only**.
+6. Change `www` only as Vercel instructs and leave it DNS only. Preserve Cloudflare nameservers, verification TXT records, and every unrelated record.
 7. Watch DNS and Vercel domain status until both hostnames validate and HTTPS is issued.
 8. Test on a second network and cellular data to sample different resolvers.
 9. Verify one canonical host strategy: either apex redirects to `www`, or `www` redirects to apex. Avoid two independently indexable copies.
@@ -132,6 +147,16 @@ Target: T+0 to T+60 minutes, then next morning.
 8. Repeat key page, booking availability, and error-log checks the next morning.
 
 Keep the legacy Cloudways application and backup available for at least seven days. Do not delete the duplicate Vercel project or rotate credentials during the active launch window; clean those up in a separate controlled change.
+
+## Post-launch ownership transfer
+
+The domain registration should ultimately belong to the client even if M1 continues managing the website.
+
+1. Have the client create a Namecheap account under their business-controlled email, enable MFA, complete profile/registrant information, and add a renewal payment method.
+2. After the launch has been stable for at least seven days, use Namecheap **Sharing & Transfer → Change Ownership** to push the domain to the client’s Namecheap username/account.
+3. Confirm the client accepts the ownership invitation and verify expiration date, auto-renewal, registrant contacts, domain privacy, and recovery settings.
+4. Verify the Cloudflare nameservers remain unchanged. A Namecheap account push should not require DNS or hosting changes.
+5. Keep the Cloudflare zone in the client-owned Cloudflare account and manage it through invited M1 access. If the zone was created in an M1-owned account, schedule a separate documented Cloudflare account migration rather than improvising it during launch.
 
 ## Rollback procedure
 

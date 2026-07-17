@@ -12,6 +12,10 @@ Do not change the public DNS until every **GO/NO-GO gate** is checked. Client ap
 
 - [ ] Cloudways on-demand backup completed and timestamp recorded.
 - [ ] Current DNS zone exported or fully screenshotted.
+- [ ] Cloudflare zone is created in a client-owned account (preferred), with M1 invited as administrator.
+- [ ] Every existing DNS record has been copied into Cloudflare before changing nameservers.
+- [ ] Namecheap uses the two assigned Cloudflare nameservers and Cloudflare reports the zone as Active.
+- [ ] The legacy site still resolves correctly after the nameserver change and before the website cutover.
 - [ ] `cms.tupelohoneyspa.com` resolves to `157.245.0.152`.
 - [ ] Cloudways serves a valid TLS certificate for `cms.tupelohoneyspa.com`.
 - [ ] WordPress admin, REST API, and three uploaded images work on the `cms` hostname.
@@ -52,6 +56,9 @@ Only after all gates pass:
 
 - [ ] Add `tupelohoneyspa.com` and `www.tupelohoneyspa.com` to the correct Vercel project.
 - [ ] Copy the exact DNS values shown by Vercel; do not rely on remembered defaults.
+- [ ] Create and edit website records in Cloudflare, not Namecheap Advanced DNS.
+- [ ] Keep the apex and `www` Vercel records **DNS only** (gray cloud) during validation and launch.
+- [ ] Keep `cms` DNS only during Cloudways TLS and WordPress-origin validation.
 - [ ] Record cutover start time: __________ ET.
 - [ ] Change only the apex `A` record from `157.245.0.152` to Vercel’s displayed value.
 - [ ] Change `www` only if Vercel instructs it; preserve every unrelated record.
@@ -85,3 +92,12 @@ Rollback immediately for duplicate charges/bookings, credential exposure, securi
 - [ ] Notify the client that the legacy site is restored while remediation continues.
 
 The current public DNS TTL is 1,800 seconds, so some visitors may remain on either version for up to roughly 30 minutes after a change or rollback.
+
+## Domain ownership follow-up
+
+- [ ] Client creates and secures their own Namecheap account with MFA.
+- [ ] Use Namecheap **Change Ownership** to push the domain to the client account after launch stabilization.
+- [ ] Confirm registrant contact, renewal payment, auto-renewal, and recovery details belong to the client.
+- [ ] Keep the Cloudflare zone client-owned and retain M1 through delegated member access.
+
+The later Namecheap account push should preserve the Cloudflare nameservers, so it is a separate administrative change and does not require another website cutover.
