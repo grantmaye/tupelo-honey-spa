@@ -202,7 +202,11 @@ function decodeEntities(value: string) {
     .replace(/&nbsp;/g, " ")
     .replace(/&amp;/g, "&")
     .replace(/&#0?39;|&apos;/g, "'")
+    .replace(/&rsquo;|&lsquo;/g, "’")
+    .replace(/&rdquo;|&ldquo;/g, "\"")
     .replace(/&quot;/g, "\"")
     .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">");
+    .replace(/&gt;/g, ">")
+    .replace(/&#(\\d+);/g, (_, codePoint: string) => String.fromCodePoint(Number(codePoint)))
+    .replace(/&#x([\\da-f]+);/gi, (_, codePoint: string) => String.fromCodePoint(Number.parseInt(codePoint, 16)));
 }
