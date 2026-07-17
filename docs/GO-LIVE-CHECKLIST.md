@@ -5,6 +5,7 @@
 **Technical owner:** M1 Software  
 **Legacy WordPress origin:** `157.245.0.152`  
 **Production Vercel project:** `old-team-m/tupelo-honey-spa`
+**Assigned Cloudflare nameservers:** `ben.ns.cloudflare.com`, `celine.ns.cloudflare.com`
 
 Do not change the public DNS until every **GO/NO-GO gate** is checked. Client approval authorizes the launch; it does not waive a failed technical gate.
 

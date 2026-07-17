@@ -14,6 +14,7 @@ State captured July 16, 2026:
 - `www`: CNAME to `tupelohoneyspa.com`, TTL 1,800 seconds.
 - `cms.tupelohoneyspa.com`: not yet created.
 - Authoritative DNS initially uses DigiCert DNS nameservers. The approved target is a client-owned Cloudflare zone, with Namecheap remaining the registrar.
+- Cloudflare assigned `ben.ns.cloudflare.com` and `celine.ns.cloudflare.com` during onboarding on July 17, 2026.
 - No apex MX records were returned during preflight. The website contact destination is currently Gmail, not domain-hosted inbox delivery.
 - WordPress and its REST API are currently served from the apex hostname.
 - Vercel production project: `old-team-m/tupelo-honey-spa` (`prj_DK4gYhLvxOBoVN7RrwxfwCzPxlik`).
