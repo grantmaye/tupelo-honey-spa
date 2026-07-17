@@ -39,11 +39,11 @@ export default async function Home() {
       <section className="border-y border-[#893d3e]/10 bg-[#ead6cf] py-6 sm:py-7">
         <div className="container-site flex flex-col gap-4 text-center sm:flex-row sm:items-center sm:justify-between sm:text-left">
           <div>
-            <span className="text-[.65rem] font-bold uppercase tracking-[.16em] text-[#893d3e]">Welcome back, Janell</span>
-            <h2 className="font-display mt-1 text-2xl text-[#33373d] sm:text-3xl">{content.announcementTitle}</h2>
-            <p className="mt-1 line-clamp-2 text-sm text-[#676767]">{content.announcementCopy}</p>
+            <span className="text-[.65rem] font-bold uppercase tracking-[.16em] text-[#893d3e]">New at Tupelo Honey</span>
+            <h2 className="font-display mt-1 text-2xl text-[#33373d] sm:text-3xl">Meet our new YAG laser.</h2>
+            <p className="mt-1 line-clamp-2 text-sm text-[#676767]">Ready for smoother skin? Book your laser appointment today.</p>
           </div>
-          <Link href="/book?provider=janell" className="button-secondary shrink-0 !min-h-[44px] !rounded-[3px]">Book with Janell <ArrowRight size={16} /></Link>
+          <Link href="/book?service=laser-consultation" className="button-secondary shrink-0 !min-h-[44px] !rounded-[3px]">Book Laser <ArrowRight size={16} /></Link>
         </div>
       </section>
 
