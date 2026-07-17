@@ -1,3 +1,5 @@
+import { wordpressUrl } from "@/lib/wordpress-url";
+
 export type Service = {
   slug: string;
   name: string;
@@ -58,14 +60,14 @@ export const services: Service[] = [
 export type TeamMember = { slug: string; name: string; role: string; specialties: string[]; image: string; bio: string; fullBio?: string[]; externalBooking?: string; archived?: boolean };
 
 export const team: TeamMember[] = [
-  { slug: "julie", name: "Julie Campanella Krembel", role: "Founder · Licensed Waxer", specialties: ["Waxing", "Brows", "Laser"], image: "https://tupelohoneyspa.com/wp-content/uploads/2023/09/julie-300.jpg", bio: "Tupelo Honey’s founder and a meticulous specialist known for warm, straightforward care and beautiful results." },
-  { slug: "holli", name: "Holli Simme", role: "Licensed Massage Therapist", specialties: ["Massage", "Bodywork"], image: "https://tupelohoneyspa.com/wp-content/uploads/2023/09/holli-300.jpg", bio: "Thoughtful, therapeutic massage that meets your body where it is today.", externalBooking: "https://book-a-massage-today.square.site/" },
-  { slug: "janell", name: "Janell Dixon", role: "Licensed Esthetician · RN", specialties: ["Brows", "Lashes", "Waxing"], image: "https://tupelohoneyspa.com/wp-content/uploads/2023/09/janell-300.jpg", bio: "An esthetician, makeup artist, and registered nurse bringing precision and artistry to every appointment." },
-  { slug: "jillian", name: "Jillian Blaszkowiak", role: "Licensed Massage Therapist", specialties: ["Massage", "Relaxation"], image: "https://tupelohoneyspa.com/wp-content/uploads/2023/09/jillian-300.jpg", bio: "Restorative massage in a calm, supportive environment." },
-  { slug: "danni", name: "Danielle “Danni” Domanowski", role: "Reiki Practitioner", specialties: ["Reiki", "Sound Healing"], image: "https://tupelohoneyspa.com/wp-content/uploads/2023/09/danni-300.jpg", bio: "Grounding energy work designed to help you slow down, reconnect, and leave lighter." },
-  { slug: "abby", name: "Abby Brown", role: "Licensed Esthetician", specialties: ["Facials", "Skin"], image: "https://tupelohoneyspa.com/wp-content/uploads/2023/09/abby-300.jpg", bio: "Customized skincare with an approachable, caring touch." },
-  { slug: "alex", name: "Alexandria Brown", role: "Licensed Esthetician", specialties: ["Facials", "Skin"], image: "https://tupelohoneyspa.com/wp-content/uploads/2025/01/IMG_3443.jpeg", bio: "Results-minded facials grounded in comfort, education, and care.", archived: true },
-  { slug: "heather", name: "Heather Roycroft", role: "Licensed Esthetician", specialties: ["Facials", "Skin"], image: "https://tupelohoneyspa.com/wp-content/uploads/2025/03/heather-roycroft.jpeg", bio: "Personalized skin treatments that make good skincare feel simple." },
+  { slug: "julie", name: "Julie Campanella Krembel", role: "Founder · Licensed Waxer", specialties: ["Waxing", "Brows", "Laser"], image: wordpressUrl("/wp-content/uploads/2023/09/julie-300.jpg"), bio: "Tupelo Honey’s founder and a meticulous specialist known for warm, straightforward care and beautiful results." },
+  { slug: "holli", name: "Holli Simme", role: "Licensed Massage Therapist", specialties: ["Massage", "Bodywork"], image: wordpressUrl("/wp-content/uploads/2023/09/holli-300.jpg"), bio: "Thoughtful, therapeutic massage that meets your body where it is today.", externalBooking: "https://book-a-massage-today.square.site/" },
+  { slug: "janell", name: "Janell Dixon", role: "Licensed Esthetician · RN", specialties: ["Brows", "Lashes", "Waxing"], image: wordpressUrl("/wp-content/uploads/2023/09/janell-300.jpg"), bio: "An esthetician, makeup artist, and registered nurse bringing precision and artistry to every appointment." },
+  { slug: "jillian", name: "Jillian Blaszkowiak", role: "Licensed Massage Therapist", specialties: ["Massage", "Relaxation"], image: wordpressUrl("/wp-content/uploads/2023/09/jillian-300.jpg"), bio: "Restorative massage in a calm, supportive environment." },
+  { slug: "danni", name: "Danielle “Danni” Domanowski", role: "Reiki Practitioner", specialties: ["Reiki", "Sound Healing"], image: wordpressUrl("/wp-content/uploads/2023/09/danni-300.jpg"), bio: "Grounding energy work designed to help you slow down, reconnect, and leave lighter." },
+  { slug: "abby", name: "Abby Brown", role: "Licensed Esthetician", specialties: ["Facials", "Skin"], image: wordpressUrl("/wp-content/uploads/2023/09/abby-300.jpg"), bio: "Customized skincare with an approachable, caring touch." },
+  { slug: "alex", name: "Alexandria Brown", role: "Licensed Esthetician", specialties: ["Facials", "Skin"], image: wordpressUrl("/wp-content/uploads/2025/01/IMG_3443.jpeg"), bio: "Results-minded facials grounded in comfort, education, and care.", archived: true },
+  { slug: "heather", name: "Heather Roycroft", role: "Licensed Esthetician", specialties: ["Facials", "Skin"], image: wordpressUrl("/wp-content/uploads/2025/03/heather-roycroft.jpeg"), bio: "Personalized skin treatments that make good skincare feel simple." },
 ];
 
 export const activeTeam = team.filter((member) => !member.archived);
