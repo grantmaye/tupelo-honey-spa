@@ -110,7 +110,7 @@ export function BookingFlow({ initialService, initialProvider, services, provide
   const progress = Math.min(step, 4);
 
   return <div className="container-site py-10 sm:py-16">
-    <div className="mb-9 flex items-center justify-between gap-5"><div><span className="inline-flex rounded-full bg-[#ead6cf] px-3 py-1.5 text-[.62rem] font-bold uppercase tracking-[.13em] text-[#893d3e]">{liveSquare ? "Live Square services & availability" : "Booking preview"}</span><h1 className="font-display mt-4 text-4xl sm:text-5xl">{complete ? "You’re all set." : "Book your visit"}</h1></div>{!complete && <span className="hidden text-xs text-[#676767] sm:block">Step {progress} of 4</span>}</div>
+    <div className="mb-9 flex items-center justify-between gap-5"><h1 className="font-display text-4xl sm:text-5xl">{complete ? "You’re all set." : "Book your visit"}</h1>{!complete && <span className="hidden text-xs text-[#676767] sm:block">Step {progress} of 4</span>}</div>
     {!complete && <div className="mb-10 grid grid-cols-4 gap-2" aria-label={`Step ${progress} of 4`}>{[1,2,3,4].map((item) => <div key={item} className={`h-1.5 rounded-full ${item <= progress ? "bg-[#893d3e]" : "bg-[#e4ded4]"}`} />)}</div>}
     <div className="grid gap-7 lg:grid-cols-[1fr_330px]">
       <div className="paper-card min-h-[560px] p-5 sm:p-8">
