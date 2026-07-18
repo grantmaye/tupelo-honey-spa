@@ -19,7 +19,7 @@ export default async function Home() {
     <>
       <Link href="/services?category=Laser" className="flex min-h-16 items-center justify-center gap-5 bg-[#893d3e] px-5 text-center text-base font-medium text-white sm:text-xl">
         <Star size={20} strokeWidth={1.8} />
-        <span>Now Offering Laser Hair Removal</span>
+        <span>The Splendor X Experience Has Arrived</span>
         <Star size={20} strokeWidth={1.8} />
       </Link>
 
@@ -40,10 +40,22 @@ export default async function Home() {
         <div className="container-site flex flex-col gap-4 text-center sm:flex-row sm:items-center sm:justify-between sm:text-left">
           <div>
             <span className="text-[.65rem] font-bold uppercase tracking-[.16em] text-[#893d3e]">New at Tupelo Honey</span>
-            <h2 className="font-display mt-1 text-2xl text-[#33373d] sm:text-3xl">Meet our new YAG laser.</h2>
-            <p className="mt-1 line-clamp-2 text-sm text-[#676767]">Ready for smoother skin? Book your laser appointment today.</p>
+            <h2 className="font-display mt-1 text-2xl text-[#33373d] sm:text-3xl">Meet Splendor X—the next level of smooth.</h2>
+            <p className="mt-1 text-sm leading-6 text-[#676767]">Our Lumenis Splendor X 1.0 blends Alexandrite and YAG technology for a personalized laser hair removal experience.</p>
           </div>
-          <Link href="/book?service=laser-hair-removal-consultation" className="button-secondary shrink-0 !min-h-[44px] !rounded-[3px]">Book Laser <ArrowRight size={16} /></Link>
+          <Link href="/book?service=laser-hair-removal-consultation" className="button-secondary shrink-0 !min-h-[44px] !rounded-[3px]">Start Your Smooth-Skin Journey <ArrowRight size={16} /></Link>
+        </div>
+      </section>
+
+      <section className="bg-white py-20 text-center sm:py-28">
+        <div className="container-site max-w-5xl">
+          <span className="eyebrow justify-center before:hidden">Welcome to Tupelo Honey</span>
+          <h1 className="font-display mt-5 text-5xl leading-[.95] text-[#33373d] sm:text-7xl">The spa you’ve been looking for.</h1>
+          <p className="mx-auto mt-7 max-w-3xl text-base leading-8 text-[#676767] sm:text-lg">Come as you are and get ready to feel amazing. From smooth skin and glowing facials to restorative massage and energy work, our collective brings your favorite beauty and wellness experiences together in one warm, welcoming place.</p>
+          <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <Link href="/services" className="button-primary !rounded-[3px]">Explore the Experience <ArrowRight size={16} /></Link>
+            <Link href="/book" className="button-secondary !rounded-[3px]">Book Your Visit</Link>
+          </div>
         </div>
       </section>
 
