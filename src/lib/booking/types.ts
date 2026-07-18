@@ -8,8 +8,16 @@ export type BookingRequest = {
   idempotencyKey: string;
   customer: { firstName: string; lastName: string; email: string; phone: string };
   note?: string;
+  cardSourceId: string;
+  policyAccepted: true;
+  saveCardForFuture: boolean;
 };
-export type BookingResult = { id: string; status: "confirmed"; startsAt: string };
+export type BookingResult = {
+  id: string;
+  status: "confirmed";
+  startsAt: string;
+  securedCard: { brand: string; last4: string; savedForFuture: boolean };
+};
 
 export interface BookingProvider {
   mode: BookingMode;
