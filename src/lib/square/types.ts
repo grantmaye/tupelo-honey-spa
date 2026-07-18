@@ -4,6 +4,7 @@ export type SquareService = Service & {
   squareItemId: string;
   squareVariationId: string;
   squareVersion: number;
+  priceAmountCents?: number;
   providerIds: string[];
 };
 

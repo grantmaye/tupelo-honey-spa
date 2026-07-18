@@ -166,6 +166,7 @@ function mapServices(items: CatalogItem[], categoryNames: Map<string, string>, l
         squareItemId: item.id,
         squareVariationId: variation.id,
         squareVersion: variation.version ?? item.version ?? 0,
+        priceAmountCents: data.price_money?.amount,
         providerIds: data.team_member_ids ?? [],
       });
     }
@@ -215,9 +216,15 @@ function fallbackData(): SquareBookingData {
     squareItemId: "",
     squareVariationId: "",
     squareVersion: 0,
+    priceAmountCents: parseFallbackPrice(service.price),
     providerIds: [],
   }));
   return { live: false, services, providers, categories: brandCategories };
+}
+
+function parseFallbackPrice(value: string) {
+  const match = value.match(/^\$(\d+(?:\.\d{1,2})?)$/);
+  return match ? Math.round(Number(match[1]) * 100) : undefined;
 }
 
 function isAtLocation(object: { present_at_all_locations?: boolean; present_at_location_ids?: string[]; absent_at_location_ids?: string[] }, locationId: string) {

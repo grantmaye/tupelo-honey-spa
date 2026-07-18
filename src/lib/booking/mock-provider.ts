@@ -18,6 +18,11 @@ export const mockBookingProvider: BookingProvider = {
     }));
   },
   async createBooking(request: BookingRequest): Promise<BookingResult> {
-    return { id: `DEMO-${Date.now().toString(36).toUpperCase()}`, status: "confirmed", startsAt: request.startAt };
+    return {
+      id: `DEMO-${Date.now().toString(36).toUpperCase()}`,
+      status: "confirmed",
+      startsAt: request.startAt,
+      securedCard: { brand: "Test card", last4: "0000", savedForFuture: request.saveCardForFuture },
+    };
   },
 };

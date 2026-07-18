@@ -1,4 +1,5 @@
 import type { Availability, BookingProvider, BookingRequest, BookingResult } from "./types";
+import { CANCELLATION_FEE_PERCENT, createBookingCardPolicyNote } from "./card-policy";
 import { getSquareBookingData } from "@/lib/square/catalog";
 import { getSquareLocationId, squareRequest } from "@/lib/square/client";
 
@@ -12,6 +13,13 @@ type SearchAvailabilityResponse = {
 type Customer = { id?: string };
 type SearchCustomersResponse = { customers?: Customer[] };
 type CreateCustomerResponse = { customer?: Customer };
+type CreateCardResponse = {
+  card?: {
+    id?: string;
+    last_4?: string;
+    card_brand?: string;
+  };
+};
 type CreateBookingResponse = {
   booking?: {
     id?: string;
@@ -88,27 +96,65 @@ export const squareBookingProvider: BookingProvider = {
     if (!stillAvailable) throw new Error("That time was just booked. Please choose another opening.");
 
     const customerId = await findOrCreateCustomer(request);
-    const response = await squareRequest<CreateBookingResponse>("/v2/bookings", {
+    const cardResponse = await squareRequest<CreateCardResponse>("/v2/cards", {
       method: "POST",
       body: JSON.stringify({
-        idempotency_key: `booking-${request.idempotencyKey}`,
-        booking: {
-          location_id: getSquareLocationId(),
+        idempotency_key: `card-${request.idempotencyKey}`,
+        source_id: request.cardSourceId,
+        card: {
           customer_id: customerId,
-          start_at: request.startAt,
-          customer_note: request.note || undefined,
-          appointment_segments: [{
-            team_member_id: provider.squareId,
-            service_variation_id: service.squareVariationId,
-            service_variation_version: service.squareVersion,
-          }],
+          cardholder_name: `${request.customer.firstName} ${request.customer.lastName}`,
+          reference_id: request.idempotencyKey,
         },
       }),
     });
+    const card = cardResponse.card;
+    if (!card?.id || !card.last_4) throw new Error("Square did not return a secured card confirmation.");
+    const cardBrand = formatCardBrand(card.card_brand);
+    const feeCents = service.priceAmountCents === undefined
+      ? undefined
+      : Math.round(service.priceAmountCents * CANCELLATION_FEE_PERCENT / 100);
+    const policyNote = createBookingCardPolicyNote({
+      cardId: card.id,
+      feeCents,
+      saveForFuture: request.saveCardForFuture,
+      acceptedAt: new Date().toISOString(),
+      cardBrand,
+      last4: card.last_4,
+    });
 
-    const booking = response.booking;
-    if (!booking?.id || !booking.start_at) throw new Error("Square did not return a booking confirmation.");
-    return { id: booking.id, status: "confirmed", startsAt: booking.start_at };
+    try {
+      const response = await squareRequest<CreateBookingResponse>("/v2/bookings", {
+        method: "POST",
+        body: JSON.stringify({
+          idempotency_key: `booking-${request.idempotencyKey}`,
+          booking: {
+            location_id: getSquareLocationId(),
+            customer_id: customerId,
+            start_at: request.startAt,
+            customer_note: request.note || undefined,
+            seller_note: policyNote,
+            appointment_segments: [{
+              team_member_id: provider.squareId,
+              service_variation_id: service.squareVariationId,
+              service_variation_version: service.squareVersion,
+            }],
+          },
+        }),
+      });
+
+      const booking = response.booking;
+      if (!booking?.id || !booking.start_at) throw new Error("Square did not return a booking confirmation.");
+      return {
+        id: booking.id,
+        status: "confirmed",
+        startsAt: booking.start_at,
+        securedCard: { brand: cardBrand, last4: card.last_4, savedForFuture: request.saveCardForFuture },
+      };
+    } catch (error) {
+      await disableCardQuietly(card.id);
+      throw error;
+    }
   },
 };
 
@@ -143,4 +189,17 @@ function normalizePhone(value: string) {
   if (digits.length === 10) return `+1${digits}`;
   if (digits.length === 11 && digits.startsWith("1")) return `+${digits}`;
   throw new Error("Enter a valid 10-digit US mobile number.");
+}
+
+async function disableCardQuietly(cardId: string) {
+  try {
+    await squareRequest(`/v2/cards/${encodeURIComponent(cardId)}/disable`, { method: "POST" });
+  } catch {
+    // The original booking error is more useful to the customer; cleanup is retried operationally if needed.
+  }
+}
+
+function formatCardBrand(value?: string) {
+  if (!value) return "Card";
+  return value.toLowerCase().split("_").map((part) => `${part.charAt(0).toUpperCase()}${part.slice(1)}`).join(" ");
 }
