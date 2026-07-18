@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
   let disabled = 0;
   let retained = 0;
   let alreadyDisabled = 0;
-  const failures: Array<{ cardId: string; message: string }> = [];
+  let failures = 0;
 
   for (const [cardId, linkedBookings] of cards) {
     if (linkedBookings.some((booking) => shouldRetain(booking, now))) {
@@ -44,12 +44,12 @@ export async function GET(request: NextRequest) {
       }
       await squareRequest(`/v2/cards/${encodeURIComponent(cardId)}/disable`, { method: "POST" });
       disabled += 1;
-    } catch (error) {
-      failures.push({ cardId, message: error instanceof Error ? error.message : "Unknown Square error" });
+    } catch {
+      failures += 1;
     }
   }
 
-  return NextResponse.json({ checkedBookings: bookings.length, trackedCards: cards.size, disabled, retained, alreadyDisabled, failures }, { status: failures.length ? 207 : 200 });
+  return NextResponse.json({ checkedBookings: bookings.length, trackedCards: cards.size, disabled, retained, alreadyDisabled, failures }, { status: failures ? 207 : 200 });
 }
 
 function isAuthorizedCron(request: NextRequest) {
