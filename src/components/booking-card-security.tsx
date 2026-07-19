@@ -4,7 +4,8 @@ import { CreditCard, LockKeyhole } from "lucide-react";
 import Script from "next/script";
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
 
-type SquareTokenResult = { status: "OK" | string; token?: string; errors?: Array<{ message?: string }> };
+type SquareTokenError = { message?: string; type?: string; field?: string };
+type SquareTokenResult = { status: "OK" | string; token?: string; errors?: SquareTokenError[] };
 type SquareCard = {
   attach: (selector: string) => Promise<void>;
   destroy: () => Promise<void>;
@@ -23,6 +24,31 @@ type Props = {
   environment: "sandbox" | "production";
   onReadyChange: (ready: boolean) => void;
 };
+
+const squareTemporaryErrorPattern = /unexpected|unknown error|internal|temporar|network|timed?\s*out/i;
+const squareTemporaryErrorMessage = "Square couldn’t securely verify your card just now. Please wait a moment and try again. Nothing was charged.";
+
+function errorDetails(error: unknown) {
+  if (error instanceof Error) return { name: error.name, message: error.message };
+  return { name: "UnknownError", message: String(error) };
+}
+
+function isTemporarySquareError(message: string, type?: string) {
+  return squareTemporaryErrorPattern.test(`${type ?? ""} ${message}`);
+}
+
+function reportSquareCardError(details: { phase: "initialize" | "tokenize"; attempt?: number; name?: string; message?: string; status?: string }) {
+  void fetch("/api/booking/card-error", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(details),
+    keepalive: true,
+  }).catch(() => undefined);
+}
+
+function pause(milliseconds: number) {
+  return new Promise((resolve) => window.setTimeout(resolve, milliseconds));
+}
 
 export const BookingCardSecurity = forwardRef<BookingCardSecurityHandle, Props>(function BookingCardSecurity(
   { applicationId, locationId, environment, onReadyChange },
@@ -49,7 +75,9 @@ export const BookingCardSecurity = forwardRef<BookingCardSecurityHandle, Props>(
       cardRef.current = card;
       setError("");
       onReadyChange(true);
-    }).catch(() => {
+    }).catch((cause: unknown) => {
+      const details = errorDetails(cause);
+      reportSquareCardError({ phase: "initialize", ...details });
       setError("Secure card entry could not load. Refresh the page and try again.");
       onReadyChange(false);
     });
@@ -64,17 +92,44 @@ export const BookingCardSecurity = forwardRef<BookingCardSecurityHandle, Props>(
 
   useImperativeHandle(forwardedRef, () => ({
     async tokenize(billingContact) {
-      if (!cardRef.current) throw new Error("Secure card entry is still loading.");
-      const result = await cardRef.current.tokenize({
+      const card = cardRef.current;
+      if (!card) throw new Error("Secure card entry is still loading.");
+      const verificationDetails = {
         intent: "STORE",
         customerInitiated: true,
         sellerKeyedIn: false,
         billingContact: { ...billingContact, countryCode: "US" },
-      });
-      if (result.status !== "OK" || !result.token) {
-        throw new Error(result.errors?.[0]?.message ?? "Please review your card information.");
+      };
+
+      for (let attempt = 1; attempt <= 2; attempt += 1) {
+        let result: SquareTokenResult;
+        try {
+          result = await card.tokenize(verificationDetails);
+        } catch (cause) {
+          const details = errorDetails(cause);
+          const temporary = isTemporarySquareError(details.message, details.name);
+          reportSquareCardError({ phase: "tokenize", attempt, ...details });
+          if (temporary && attempt === 1) {
+            await pause(800);
+            continue;
+          }
+          throw new Error(temporary ? squareTemporaryErrorMessage : details.message || "Please review your card information.");
+        }
+
+        if (result.status === "OK" && result.token) return result.token;
+
+        const firstError = result.errors?.[0];
+        const message = firstError?.message ?? "Please review your card information.";
+        const temporary = isTemporarySquareError(message, firstError?.type);
+        if (temporary) reportSquareCardError({ phase: "tokenize", attempt, name: firstError?.type, message, status: result.status });
+        if (temporary && attempt === 1) {
+          await pause(800);
+          continue;
+        }
+        throw new Error(temporary ? squareTemporaryErrorMessage : message);
       }
-      return result.token;
+
+      throw new Error(squareTemporaryErrorMessage);
     },
   }), []);
 
