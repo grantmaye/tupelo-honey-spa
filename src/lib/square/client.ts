@@ -22,22 +22,26 @@ export class SquareApiError extends Error {
   }
 }
 
+function squareEnv(name: "SQUARE_ACCESS_TOKEN" | "SQUARE_LOCATION_ID" | "SQUARE_ENVIRONMENT" | "SQUARE_API_VERSION") {
+  return process.env[name]?.trim() ?? "";
+}
+
 export function isSquareConfigured() {
-  return Boolean(process.env.SQUARE_ACCESS_TOKEN && process.env.SQUARE_LOCATION_ID);
+  return Boolean(squareEnv("SQUARE_ACCESS_TOKEN") && squareEnv("SQUARE_LOCATION_ID"));
 }
 
 export function getSquareEnvironment() {
-  return process.env.SQUARE_ENVIRONMENT === "production" ? "production" : "sandbox";
+  return squareEnv("SQUARE_ENVIRONMENT") === "production" ? "production" : "sandbox";
 }
 
 export function getSquareLocationId() {
-  const locationId = process.env.SQUARE_LOCATION_ID;
+  const locationId = squareEnv("SQUARE_LOCATION_ID");
   if (!locationId) throw new SquareApiError("Square location is not configured.", 503, "MISSING_LOCATION");
   return locationId;
 }
 
 export async function squareRequest<T>(path: string, init: RequestInit = {}): Promise<T> {
-  const accessToken = process.env.SQUARE_ACCESS_TOKEN;
+  const accessToken = squareEnv("SQUARE_ACCESS_TOKEN");
   if (!accessToken) throw new SquareApiError("Square access is not configured.", 503, "MISSING_TOKEN");
 
   const baseUrl = getSquareEnvironment() === "production"
@@ -49,7 +53,7 @@ export async function squareRequest<T>(path: string, init: RequestInit = {}): Pr
     headers: {
       Authorization: `Bearer ${accessToken}`,
       "Content-Type": "application/json",
-      "Square-Version": process.env.SQUARE_API_VERSION ?? DEFAULT_SQUARE_API_VERSION,
+      "Square-Version": squareEnv("SQUARE_API_VERSION") || DEFAULT_SQUARE_API_VERSION,
       ...init.headers,
     },
     cache: "no-store",
