@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { GiftCardCheckout } from "@/components/gift-card-checkout";
+import { getSquareEnvironment, getSquareLocationId } from "@/lib/square/client";
 
 export const metadata: Metadata = {
   title: "Gift Cards",
@@ -8,8 +9,8 @@ export const metadata: Metadata = {
 
 export default function GiftCardsPage() {
   const applicationId = (process.env.NEXT_PUBLIC_SQUARE_APPLICATION_ID ?? "").trim();
-  const locationId = (process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID ?? process.env.SQUARE_LOCATION_ID ?? "").trim();
-  const environment = process.env.SQUARE_ENVIRONMENT?.trim() === "sandbox" ? "sandbox" : "production";
+  const locationId = getSquareLocationId();
+  const environment = getSquareEnvironment();
 
   return <GiftCardCheckout applicationId={applicationId} locationId={locationId} environment={environment} />;
 }
