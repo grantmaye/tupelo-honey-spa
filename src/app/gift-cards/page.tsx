@@ -7,9 +7,9 @@ export const metadata: Metadata = {
 };
 
 export default function GiftCardsPage() {
-  const applicationId = process.env.NEXT_PUBLIC_SQUARE_APPLICATION_ID ?? "";
-  const locationId = process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID ?? "";
-  const environment = process.env.SQUARE_ENVIRONMENT === "sandbox" ? "sandbox" : "production";
+  const applicationId = (process.env.NEXT_PUBLIC_SQUARE_APPLICATION_ID ?? "").trim();
+  const locationId = (process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID ?? process.env.SQUARE_LOCATION_ID ?? "").trim();
+  const environment = process.env.SQUARE_ENVIRONMENT?.trim() === "sandbox" ? "sandbox" : "production";
 
   return <GiftCardCheckout applicationId={applicationId} locationId={locationId} environment={environment} />;
 }
