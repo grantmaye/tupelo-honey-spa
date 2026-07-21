@@ -1,104 +1,113 @@
-# Tupelo Honey Spa — Go-Live Checklist
+# Tupelo Honey Spa — Go-Live Record and Checklist
 
-**Change window:** July 16, 2026, evening (America/New_York)  
+**Original change window:** July 16, 2026, evening (America/New_York)  
 **Change commander:** Grant Maye  
 **Technical owner:** M1 Software  
-**Legacy WordPress origin:** `157.245.0.152`  
-**Production Vercel project:** `old-team-m/tupelo-honey-spa`
-**Assigned Cloudflare nameservers:** `ben.ns.cloudflare.com`, `celine.ns.cloudflare.com`
+**Production application:** M1-controlled Vercel project  
+**Source repository:** M1-controlled GitHub repository  
+**Authoritative DNS:** Cloudflare  
+**Headless CMS:** `cms.tupelohoneyspa.com`
 
-Do not change the public DNS until every **GO/NO-GO gate** is checked. Client approval authorizes the launch; it does not waive a failed technical gate.
+## Launch outcome — July 20, 2026
 
-## GO/NO-GO gates
+The Next.js application is live on the public domain and the production acceptance flow is confirmed:
 
-- [ ] Cloudways on-demand backup completed and timestamp recorded.
-- [ ] Current DNS zone exported or fully screenshotted.
-- [ ] Cloudflare zone is created in a client-owned account (preferred), with M1 invited as administrator.
-- [ ] Every existing DNS record has been copied into Cloudflare before changing nameservers.
-- [ ] Namecheap uses the two assigned Cloudflare nameservers and Cloudflare reports the zone as Active.
-- [ ] The legacy site still resolves correctly after the nameserver change and before the website cutover.
-- [ ] `cms.tupelohoneyspa.com` resolves to `157.245.0.152`.
-- [ ] Cloudways serves a valid TLS certificate for `cms.tupelohoneyspa.com`.
-- [ ] WordPress admin, REST API, and three uploaded images work on the `cms` hostname.
+- A controlled true-card website booking completed successfully end to end.
+- A controlled production gift-card transaction completed successfully end to end.
+- The operator reported that both flows worked as expected.
+- No customer details, card data, transaction identifiers, credentials, recovery codes, or secret environment values are recorded in this document.
+
+The unchecked items below are retained as a reusable launch/reverification checklist; they do not mean the July 20 acceptance transactions are still outstanding. Post-launch operational work is tracked in [Production Monitoring and Recovery](PRODUCTION-MONITORING-RECOVERY.md).
+
+## GO/NO-GO gates for a future material cutover
+
+- [ ] Current CMS/database/media backup completed and timestamp recorded.
+- [ ] Current DNS zone exported.
+- [ ] Cloudflare ownership, M1 delegated access, MFA, and recovery paths verified.
+- [ ] Every live DNS record reconciled before a nameserver or zone migration.
+- [ ] CMS hostname, TLS, admin, REST API, and representative media verified.
 - [ ] Correct Vercel project contains all required Production environment variables.
-- [ ] `/api/square/health` returns HTTP 200 with `"connected": true`.
-- [ ] A controlled Square appointment is created, visible in Square, and canceled.
-- [ ] A controlled gift-card payment, activation, email delivery, and redemption-code display are verified; refund/void is completed if it is a test purchase.
-- [ ] Contact form delivers to `tupelohoneyspa@gmail.com` and Reply works.
-- [ ] Latest build passes and the approved Vercel deployment is READY.
-- [ ] Desktop and mobile smoke tests pass with no critical console or runtime errors.
-- [ ] Rollback owner has this document open and can access both DNS and Cloudways.
+- [ ] Square health endpoint returns a successful connected response.
+- [ ] A controlled Square appointment is created once, appears correctly in Square, and is canceled or otherwise reconciled.
+- [ ] A controlled gift-card transaction verifies payment, activation, delivery, and redemption-code display; refund/void is completed when required by the test plan.
+- [ ] Contact form delivery and reply routing work.
+- [ ] Approved build and deployment are READY.
+- [ ] Desktop and mobile smoke tests pass without critical console or runtime errors.
+- [ ] Last known-good deployment and rollback operator are identified.
+- [ ] Client acceptance tester and support escalation path are confirmed.
 
-If any box above is unchecked, **NO-GO**. Keep the WordPress site live and continue remediation without changing the apex record.
+If an applicable gate fails, declare **NO-GO** and remediate or roll back instead of accepting degraded booking, payment, data, email, or security behavior.
 
-## Correct Vercel environment variables
+## Production environment-variable contract
 
-Set these in **Production** on `old-team-m/tupelo-honey-spa`, not the duplicate project:
+The application expects the following variable names in the correct Vercel project and environment:
 
-- [ ] `SQUARE_ACCESS_TOKEN` — Sensitive, server only
-- [ ] `SQUARE_ENVIRONMENT=production`
-- [ ] `SQUARE_API_VERSION=2026-05-20`
-- [ ] `SQUARE_LOCATION_ID`
-- [ ] `NEXT_PUBLIC_SQUARE_APPLICATION_ID`
-- [ ] `NEXT_PUBLIC_SQUARE_LOCATION_ID`
-- [ ] `WORDPRESS_API_URL=https://cms.tupelohoneyspa.com/wp-json/wp/v2`
-- [ ] `NEXT_PUBLIC_WORDPRESS_SITE_URL=https://cms.tupelohoneyspa.com`
-- [ ] `WORDPRESS_REVALIDATE_SECRET` — Sensitive
-- [ ] `RESEND_API_KEY` — Sensitive
-- [ ] `GIFT_CARD_FROM_EMAIL` — verified sender
-- [ ] `CONTACT_FROM_EMAIL` — verified sender
-- [ ] `CONTACT_TO_EMAIL=tupelohoneyspa@gmail.com`
+- `SQUARE_ACCESS_TOKEN` — Sensitive and server-only
+- `SQUARE_ENVIRONMENT`
+- `SQUARE_API_VERSION`
+- `SQUARE_LOCATION_ID` — sole location authority
+- `NEXT_PUBLIC_SQUARE_APPLICATION_ID`
+- `WORDPRESS_API_URL`
+- `NEXT_PUBLIC_WORDPRESS_SITE_URL`
+- `WORDPRESS_REVALIDATE_SECRET` — Sensitive and server-only
+- `RESEND_API_KEY` — Sensitive and server-only
+- `GIFT_CARD_FROM_EMAIL`
+- `CONTACT_FROM_EMAIL`
+- `CONTACT_TO_EMAIL`
 
-After any environment-variable change, redeploy before testing.
+Do not add a second public Square location variable. Do not place secret values in this checklist, source control, pull requests, tickets, screenshots, or chat. After any production environment change, redeploy before testing.
 
-## Public DNS cutover
+## Public DNS cutover checklist
 
-Only after all gates pass:
+Only after all applicable gates pass:
 
-- [ ] Add `tupelohoneyspa.com` and `www.tupelohoneyspa.com` to the correct Vercel project.
-- [ ] Copy the exact DNS values shown by Vercel; do not rely on remembered defaults.
-- [ ] Create and edit website records in Cloudflare, not Namecheap Advanced DNS.
-- [ ] Keep the apex and `www` Vercel records **DNS only** (gray cloud) during validation and launch.
-- [ ] Keep `cms` DNS only during Cloudways TLS and WordPress-origin validation.
+- [ ] Confirm apex and `www` are attached to the correct production project.
+- [ ] Copy the exact DNS targets Vercel displays at change time.
+- [ ] Make website DNS changes in Cloudflare, not in a non-authoritative registrar zone.
+- [ ] Preserve CMS, email, verification, and unrelated records.
 - [ ] Record cutover start time: __________ ET.
-- [ ] Change only the apex `A` record from `157.245.0.152` to Vercel’s displayed value.
-- [ ] Change `www` only if Vercel instructs it; preserve every unrelated record.
-- [ ] Do not change nameservers.
-- [ ] Verify apex and `www` from cellular data and a second network.
-- [ ] Verify HTTPS and the intended canonical redirect.
-- [ ] Keep the team in the change window for at least 60 minutes.
+- [ ] Change only the intended website records.
+- [ ] Verify apex and `www` from a second network.
+- [ ] Verify HTTPS and the canonical redirect.
+- [ ] Monitor throughout at least one DNS TTL and the defined change window.
 
-## Post-cutover smoke test
+## Post-change smoke test
 
-- [ ] `/`, `/services`, `/book`, `/gift-cards`, `/about`, `/team`, `/special-events`, and `/contact` return HTTP 200.
-- [ ] Logo, hero, event gallery, and each active team photo load from `cms.tupelohoneyspa.com`.
-- [ ] About menu closes correctly after pointer exit and works by keyboard/touch.
-- [ ] Navigation starts each new route at the top.
+- [ ] `/`, `/services`, `/book`, `/gift-cards`, `/about`, `/team`, `/special-events`, and `/contact` return successfully.
+- [ ] Logo, hero, event gallery, and active team photos load from the CMS.
+- [ ] Navigation, keyboard access, touch behavior, and route scroll position work.
 - [ ] Square prices, durations, bookable providers, and availability are live.
-- [ ] Alexandria Brown is absent and cannot be selected for booking.
-- [ ] Holli’s button opens her independent Square site.
-- [ ] Contact form sends exactly one email.
-- [ ] Gift-card self-purchase shows no recipient message field.
-- [ ] Vercel runtime logs show no recurring 4xx/5xx integration failures.
+- [ ] Provider/service routing matches the current business rules.
+- [ ] Holli’s booking action opens her independent Square site.
+- [ ] Contact form sends exactly one message.
+- [ ] Gift-card purchase modes show only relevant fields.
+- [ ] Vercel runtime logs show no recurring integration failures.
+- [ ] Square shows no duplicate bookings, payments, activations, or orphaned records.
+- [ ] Transactional email delivery logs show the expected single delivery.
+- [ ] The acceptance result and evidence location are recorded without sensitive data.
 
 ## Immediate rollback triggers
 
-Rollback immediately for duplicate charges/bookings, credential exposure, security incidents, or customer-data leakage. Roll back if the public site, WordPress media/API, booking, or checkout remains critically broken for more than 10 minutes.
+Rollback immediately for duplicate charges/bookings, credential exposure, security incidents, customer-data leakage, or a critically broken public site, CMS, booking, payment, or gift-card flow that cannot be restored within the approved incident window.
 
-- [ ] Restore apex `A` to `157.245.0.152`.
-- [ ] Restore `www` to its pre-change value (currently CNAME to the apex).
-- [ ] Leave `cms` intact.
-- [ ] Confirm the legacy WordPress homepage and booking links work.
-- [ ] Record rollback time and reason.
-- [ ] Notify the client that the legacy site is restored while remediation continues.
+- [ ] Stop further production tests.
+- [ ] Promote the last known-good Vercel deployment when the fault is application-only.
+- [ ] Use the documented DNS rollback only when the application/domain path cannot be recovered quickly.
+- [ ] Preserve the CMS path and relevant non-sensitive evidence.
+- [ ] Confirm the restored public path and critical customer flows.
+- [ ] Record rollback time, cause, affected window, and reconciliation owner.
+- [ ] Notify the client using the incident communication path.
 
-The current public DNS TTL is 1,800 seconds, so some visitors may remain on either version for up to roughly 30 minutes after a change or rollback.
+A rollback drill and restore rehearsal remain required even though production acceptance succeeded.
 
-## Domain ownership follow-up
+## Ownership follow-up
 
-- [ ] Client creates and secures their own Namecheap account with MFA.
-- [ ] Use Namecheap **Change Ownership** to push the domain to the client account after launch stabilization.
-- [ ] Confirm registrant contact, renewal payment, auto-renewal, and recovery details belong to the client.
-- [ ] Keep the Cloudflare zone client-owned and retain M1 through delegated member access.
+- [ ] Client domain/registrar ownership, renewal, MFA, and recovery are verified.
+- [ ] Client Cloudflare ownership and delegated M1 access are verified.
+- [ ] Client Square ownership and delegated M1 developer access are verified.
+- [ ] Client business email, customer data, and business records are recoverable.
+- [ ] M1 GitHub and Vercel ownership, MFA, recovery, billing, and production access are verified.
+- [ ] Written IP purchase/transfer exceptions, if any, are attached to the client record.
+- [ ] Offboarding obligations and export paths are documented.
 
-The later Namecheap account push should preserve the Cloudflare nameservers, so it is a separate administrative change and does not require another website cutover.
+See [Client Infrastructure Onboarding, Ownership, and Offboarding SOP](CLIENT-INFRASTRUCTURE-ONBOARDING-SOP.md).

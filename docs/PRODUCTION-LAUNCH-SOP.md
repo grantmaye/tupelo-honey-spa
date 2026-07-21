@@ -1,5 +1,7 @@
 # Production Launch SOP
 
+> Historical launch procedure. Production acceptance was confirmed on July 20, 2026 with a successful true-card website booking and a successful controlled gift-card transaction. Current operational work is tracked in [Production Monitoring and Recovery](PRODUCTION-MONITORING-RECOVERY.md), and ownership is governed by [Client Infrastructure Onboarding, Ownership, and Offboarding](CLIENT-INFRASTRUCTURE-ONBOARDING-SOP.md). Do not add customer/card data, credentials, secret values, or transaction identifiers to this record.
+
 ## Purpose
 
 This SOP moves `tupelohoneyspa.com` from the legacy Cloudways-hosted WordPress frontend to the Next.js application on Vercel while retaining WordPress as the private editorial CMS and Square as the system of record for services, staff, availability, appointments, payments, and digital gift cards.
@@ -17,9 +19,9 @@ State captured July 16, 2026:
 - Cloudflare assigned `ben.ns.cloudflare.com` and `celine.ns.cloudflare.com` during onboarding on July 17, 2026.
 - No apex MX records were returned during preflight. The website contact destination is currently Gmail, not domain-hosted inbox delivery.
 - WordPress and its REST API are currently served from the apex hostname.
-- Vercel production project: `old-team-m/tupelo-honey-spa` (`prj_DK4gYhLvxOBoVN7RrwxfwCzPxlik`).
-- Known rollback Vercel deployment: `dpl_s2wfFcJx3jrPJJsrcpSG8FTtcyFC`.
-- A duplicate Vercel project contains an earlier copy of the Square variables. It is not the public production project and must not be used for launch.
+- Current Vercel production project: `grant-maye-s-projects/tupelo-honey-spa`.
+- The last known-good deployment is selected and recorded in restricted operational evidence before each material change.
+- Historical duplicate-project risk is treated as a cleanup/access-review item; only the current public production project may be used.
 
 ## Responsibilities
 
@@ -80,7 +82,7 @@ Do not continue if the `cms` REST API or media requires the public apex to remai
 
 Target: T-40 to T-25 minutes.
 
-1. Open `https://vercel.com/old-team-m/tupelo-honey-spa/settings/environment-variables`.
+1. Open the current M1-controlled Vercel project’s environment-variable settings.
 2. Enter the variables in the checklist on the correct project and Production environment. Mark only true secrets Sensitive.
 3. Set both WordPress URLs to the tested `cms` hostname.
 4. Redeploy the approved commit. Do not promote an older deployment merely because it built successfully.
@@ -96,16 +98,16 @@ Target: T-25 to T-10 minutes.
 ### Appointment test
 
 1. Use the approved controlled test customer.
-2. Select Julie and Leg Wax, using an available afternoon slot.
+2. Select an approved production provider, service, and available slot.
 3. Submit once. Do not double-click or open duplicate checkout tabs.
-4. Record the website confirmation ID.
+4. Record a sanitized evidence reference; keep any transaction identifier only in the approved restricted system.
 5. Confirm the appointment appears once in Square with the correct customer, provider, service, location, and time.
-6. Cancel the appointment in Square and confirm its status changes. Record the canceled booking ID.
+6. Cancel or otherwise reconcile the appointment in Square and confirm its final state. Keep identifiers only in the approved restricted system.
 
 ### Gift-card test
 
 1. Use the smallest allowed controlled amount and a test recipient inbox.
-2. Confirm exactly one payment, one order, one digital gift card, and one activation activity exist in Square.
+2. Confirm exactly one payment, one order, one digital gift card, and one activation activity exist in Square; retain identifiers only in the approved restricted system.
 3. Confirm the email arrives and the redemption code matches Square.
 4. Confirm a self-purchase does not show an irrelevant gift-note field.
 5. Refund/void the test transaction if the client does not want it retained, then confirm the final Square state.
@@ -122,7 +124,7 @@ Any duplicate transaction, orphaned payment, wrong provider/service, or missing 
 
 Target: T-10 to T+30 minutes.
 
-1. Add the apex and `www` domains to `old-team-m/tupelo-honey-spa` in Vercel.
+1. Add the apex and `www` domains to `grant-maye-s-projects/tupelo-honey-spa` in Vercel.
 2. Copy the exact DNS targets Vercel displays at launch time.
 3. Ensure Vercel shows the intended production deployment for both hostnames.
 4. Record the start time.
@@ -144,7 +146,7 @@ Target: T+0 to T+60 minutes, then next morning.
 4. Check contact and gift-card email delivery logs.
 5. Confirm WordPress publishing and cache revalidation work from the new `cms` origin.
 6. Confirm sitemap, robots rules, page titles, canonical metadata, social sharing image, and favicon on the public domain.
-7. Record launch completion time, deployment ID, DNS values, test booking ID/status, test payment/refund IDs, and verifier names.
+7. Record launch completion time, deployment/commit, DNS validation, sanitized acceptance status, verifier names, and the restricted evidence location.
 8. Repeat key page, booking availability, and error-log checks the next morning.
 
 Keep the legacy Cloudways application and backup available for at least seven days. Do not delete the duplicate Vercel project or rotate credentials during the active launch window; clean those up in a separate controlled change.
@@ -198,8 +200,8 @@ For exposed secrets, customer-data leakage, duplicate bookings, or duplicate/inc
 - Production deployment: ____________________
 - `cms` verified: ____________________ ET
 - Square health verified: ____________________ ET
-- Controlled appointment ID / canceled: ____________________
-- Gift-card payment / refund ID: ____________________
+- Controlled appointment outcome / restricted evidence location: ____________________
+- Gift-card outcome / restricted evidence location: ____________________
 - Contact delivery verified by: ____________________
 - DNS cutover: ____________________ ET
 - Monitoring complete: ____________________ ET
